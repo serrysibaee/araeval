@@ -1,0 +1,19 @@
+# Example run config: python -m araeval run --config configs/run_example.yaml
+run_name: slm_core_2026-10
+output_dir: results
+models: configs/models.yaml          # .yaml, .csv (e.g. slm_candidates.csv) or .txt (one HF id per line)
+
+select: [core]                       # task names, tags or categories; "all" for every enabled task
+limit: null                          # e.g. 200 for a quick pass (deterministic subsample per task)
+
+letters: arabic                      # option letters: arabic (أ ب ج د) or latin (A B C D)
+mcq_mode: loglik                     # loglik (comparable across base/instruct) | generate | auto
+mcq_max_new_tokens: 32
+
+allow_judge: false                   # true -> run judge tasks (paid API calls)
+judge:
+  provider: anthropic                # anthropic (ANTHROPIC_API_KEY) | openai (OPENAI_API_KEY)
+  model: claude-opus-5-5
+  effort: medium
+  concurrency: 8
+seed: 1234

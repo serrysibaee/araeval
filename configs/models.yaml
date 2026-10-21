@@ -1,0 +1,32 @@
+# Models to evaluate. Required: path (HF repo id or local dir) and type (base | instruct).
+# Optional: name, backend (auto|vllm|hf|openai), dtype, max_model_len, tensor_parallel_size,
+# trust_remote_code, system_prompt, api_base (openai backend), and any extra keys
+# (tier, arabic_category, family...) which are copied into the report.
+# Gated repos (Jais-2, NileChat, Gemma) need `huggingface-cli login` with accepted terms.
+models:
+  # ---- Tiny (< 1B)
+  - {name: Jais-3-0.9B, path: inception42/Jais-3-0.9B, type: instruct, tier: Tiny, arabic_category: Arabic-specific, max_model_len: 8192}
+  - {name: Qwen3.5-0.8B, path: Qwen/Qwen3.5-0.8B, type: instruct, tier: Tiny, arabic_category: Multilingual, max_model_len: 8192}
+  - {name: Qwen3.5-0.8B-Base, path: Qwen/Qwen3.5-0.8B-Base, type: base, tier: Tiny, arabic_category: Multilingual, max_model_len: 8192}
+  - {name: LFM2.5-350M, path: LiquidAI/LFM2.5-350M, type: instruct, tier: Tiny, arabic_category: Multilingual}
+  - {name: Falcon-H1-0.5B-Base, path: tiiuae/Falcon-H1-0.5B-Base, type: base, tier: Tiny, arabic_category: Multilingual}
+  - {name: AraGPT2-mega, path: aubmindlab/aragpt2-mega, type: base, tier: Small, arabic_category: Arabic-specific, trust_remote_code: true, backend: hf}
+
+  # ---- Small (1B - <4B)
+  - {name: Qwen3.5-2B, path: Qwen/Qwen3.5-2B, type: instruct, tier: Small, arabic_category: Multilingual, max_model_len: 8192}
+  - {name: Gemma-4-E2B-it, path: google/gemma-4-E2B-it, type: instruct, tier: Small, arabic_category: Multilingual, max_model_len: 8192}
+  - {name: Granite-4.1-3B, path: ibm-granite/granite-4.1-3b, type: instruct, tier: Small, arabic_category: Multilingual}
+  - {name: Tiny-Aya-Global, path: CohereLabs/tiny-aya-global, type: instruct, tier: Small, arabic_category: Multilingual}
+  - {name: NileChat-3B-Base, path: UBC-NLP/NileChat-3B-Base, type: base, tier: Small, arabic_category: Arabic-specific}
+  - {name: SILMA-Kashif-2B, path: silma-ai/SILMA-Kashif-2B-Instruct-v1.0, type: instruct, tier: Small, arabic_category: Arabic-specific}
+
+  # ---- Medium (4B - 10B)
+  - {name: Jais-3-7B, path: inception42/Jais-3-7B, type: instruct, tier: Medium, arabic_category: Arabic-specific, max_model_len: 8192}
+  - {name: Jais-2-8B-Chat, path: inception42/Jais-2-8B-Chat, type: instruct, tier: Medium, arabic_category: Arabic-specific, max_model_len: 8192}
+  - {name: ALLaM-7B, path: ALLaM-AI/ALLaM-7B-Instruct-preview, type: instruct, tier: Medium, arabic_category: Arabic-specific}
+  - {name: Karnak-6B, path: Applied-Innovation-Center/Karnak-6B-v1.0, type: instruct, tier: Medium, arabic_category: Arabic-specific}
+  - {name: Fanar-1-9B-Instruct, path: QCRI/Fanar-1-9B-Instruct, type: instruct, tier: Medium, arabic_category: Arabic-specific}
+  - {name: Qwen3.5-9B, path: Qwen/Qwen3.5-9B, type: instruct, tier: Medium, arabic_category: Multilingual, max_model_len: 8192}
+  - {name: Gemma-4-E4B-it, path: google/gemma-4-E4B-it, type: instruct, tier: Medium, arabic_category: Multilingual, max_model_len: 8192}
+  - {name: Falcon-H1-7B-Instruct, path: tiiuae/Falcon-H1-7B-Instruct, type: instruct, tier: Medium, arabic_category: Multilingual}
+  - {name: Aya-Expanse-8B, path: CohereLabs/aya-expanse-8b, type: instruct, tier: Medium, arabic_category: Multilingual}
