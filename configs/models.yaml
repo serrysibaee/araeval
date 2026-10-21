@@ -21,12 +21,12 @@ models:
   - {name: SILMA-Kashif-2B, path: silma-ai/SILMA-Kashif-2B-Instruct-v1.0, type: instruct, tier: Small, arabic_category: Arabic-specific}
 
   # ---- Medium (4B - 10B)
-  - {name: Jais-3-7B, path: inception42/Jais-3-7B, type: instruct, tier: Medium, arabic_category: Arabic-specific, max_model_len: 8192}
-  - {name: Jais-2-8B-Chat, path: inception42/Jais-2-8B-Chat, type: instruct, tier: Medium, arabic_category: Arabic-specific, max_model_len: 8192}
-  - {name: ALLaM-7B, path: ALLaM-AI/ALLaM-7B-Instruct-preview, type: instruct, tier: Medium, arabic_category: Arabic-specific}
-  - {name: Karnak-6B, path: Applied-Innovation-Center/Karnak-6B-v1.0, type: instruct, tier: Medium, arabic_category: Arabic-specific}
-  - {name: Fanar-1-9B-Instruct, path: QCRI/Fanar-1-9B-Instruct, type: instruct, tier: Medium, arabic_category: Arabic-specific}
-  - {name: Qwen3.5-9B, path: Qwen/Qwen3.5-9B, type: instruct, tier: Medium, arabic_category: Multilingual, max_model_len: 8192}
-  - {name: Gemma-4-E4B-it, path: google/gemma-4-E4B-it, type: instruct, tier: Medium, arabic_category: Multilingual, max_model_len: 8192}
-  - {name: Falcon-H1-7B-Instruct, path: tiiuae/Falcon-H1-7B-Instruct, type: instruct, tier: Medium, arabic_category: Multilingual}
-  - {name: Aya-Expanse-8B, path: CohereLabs/aya-expanse-8b, type: instruct, tier: Medium, arabic_category: Multilingual}
+  # - {name: Jais-3-7B, path: inception42/Jais-3-7B, type: instruct, tier: Medium, arabic_category: Arabic-specific, max_model_len: 8192}
+  # - {name: Jais-2-8B-Chat, path: inception42/Jais-2-8B-Chat, type: instruct, tier: Medium, arabic_category: Arabic-specific, max_model_len: 8192}
+  # - {name: ALLaM-7B, path: ALLaM-AI/ALLaM-7B-Instruct-preview, type: instruct, tier: Medium, arabic_category: Arabic-specific}
+  # - {name: Karnak-6B, path: Applied-Innovation-Center/Karnak-6B-v1.0, type: instruct, tier: Medium, arabic_category: Arabic-specific}
+  # - {name: Fanar-1-9B-Instruct, path: QCRI/Fanar-1-9B-Instruct, type: instruct, tier: Medium, arabic_category: Arabic-specific}
+  # - {name: Qwen3.5-9B, path: Qwen/Qwen3.5-9B, type: instruct, tier: Medium, arabic_category: Multilingual, max_model_len: 8192}
+  # - {name: Gemma-4-E4B-it, path: google/gemma-4-E4B-it, type: instruct, tier: Medium, arabic_category: Multilingual, max_model_len: 8192}
+  # - {name: Falcon-H1-7B-Instruct, path: tiiuae/Falcon-H1-7B-Instruct, type: instruct, tier: Medium, arabic_category: Multilingual}
+  # - {name: Aya-Expanse-8B, path: CohereLabs/aya-expanse-8b, type: instruct, tier: Medium, arabic_category: Multilingual}
