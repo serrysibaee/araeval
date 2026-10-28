@@ -47,6 +47,8 @@ python -m araeval report results/slm_core_2026-10
 ```
 
 Runs **resume**: every finished model × task is cached under `raw/`. Re-running skips them (`--force` recomputes).
+Unfinished tasks resume mid-dataset too: model answers are saved every 256 requests to `raw/<model>/<task>.partial.jsonl`
+(deleted once the task finishes). Each model × task shows a progress bar with ETA.
 
 ## Inputs
 

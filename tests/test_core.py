@@ -115,6 +115,68 @@ def test_failed_model_load_not_retried_per_task(tmp_path=None):
     assert len(errs) == 3 and all("needs trust_remote_code" in e for e in errs), errs
 
 
+class _CountingBackend:
+    """DummyBackend that records batch sizes and can fail on the n-th call (simulates a stopped run)."""
+    def __new__(cls, spec, fail_at=None):
+        from araeval.backends.dummy import DummyBackend
+
+        class Counting(DummyBackend):
+            calls = []
+
+            def loglikelihood(self, requests):
+                if len(self.calls) == fail_at:
+                    raise RuntimeError("stopped")
+                self.calls.append(len(requests))
+                return super().loglikelihood(requests)
+
+            def generate(self, prompts, max_new_tokens=256, stop=None):
+                self.calls.append(len(prompts))
+                return super().generate(prompts, max_new_tokens, stop)
+        return Counting(spec)
+
+
+def test_task_resumes_mid_dataset(tmp_path=None):
+    import tempfile
+    import araeval.checkpoint as ck
+    import araeval.runner as rm
+    from araeval.runner import Runner
+    out = Path(tmp_path or tempfile.mkdtemp())
+    spec = TaskSpec(name="toy", hf_id="-", type="mcq", category="Toy",
+                    fields={"question": "q", "choices": ["a", "b"], "answer": "ans", "answer_format": "index0"})
+    samples = to_samples(spec, [(None, {"q": f"س{i}", "a": "نعم", "b": "لا", "ans": i % 2}) for i in range(20)])
+    old_chunk, ck.CHUNK = ck.CHUNK, 8   # 20 samples x 2 choices = 40 requests = 5 chunks
+
+    def run(name, fail_at=None):
+        backends = []
+        rm.load_backend = lambda m: backends.append(_CountingBackend(m, fail_at)) or backends[-1]
+        cfg = {"output_dir": str(out), "run_name": name, "mcq_mode": "loglik", "letters": "arabic"}
+        r = Runner([ModelSpec(name="dummy", path="-", backend="dummy")], [spec], cfg, log=lambda *_: None)
+        r._data_cache["toy"] = (samples, [])
+        r.run()
+        return json.loads((r.out / "raw/dummy/toy.metrics.json").read_text()), backends[0].calls, r.out
+
+    first, calls, run_dir = run("resume", fail_at=2)
+    assert first["status"] == "error" and calls == [8, 8]
+    second, calls, _ = run("resume")
+    assert second["status"] == "ok" and sum(calls) == 24, calls       # only the 24 unsaved requests ran
+    assert not (run_dir / "raw/dummy/toy.partial.jsonl").exists()
+    clean, _, _ = run("clean")
+    assert second["metrics"] == clean["metrics"]
+    ck.CHUNK = old_chunk
+
+
+def test_checkpoint_generate_keys_on_settings(tmp_path=None):
+    import tempfile
+    from araeval.checkpoint import CheckpointedBackend
+    path = Path(tmp_path or tempfile.mkdtemp()) / "t.partial.jsonl"
+    inner = _CountingBackend(ModelSpec(name="d", path="-"))
+    first = CheckpointedBackend(inner, path, "t").generate(["p1", "p2"], max_new_tokens=5)
+    again = CheckpointedBackend(inner, path, "t").generate(["p1", "p2"], max_new_tokens=5)
+    assert again == first and inner.calls == [2]                       # reloaded from disk, no model call
+    CheckpointedBackend(inner, path, "t").generate(["p1"], max_new_tokens=9)
+    assert inner.calls == [2, 1]                                        # different settings -> recomputed
+
+
 if __name__ == "__main__":
     for name, fn in list(globals().items()):
         if name.startswith("test_"):

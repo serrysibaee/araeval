@@ -1,4 +1,4 @@
-"""Runs every selected task for every model, with per-(model, task) caching so runs can resume."""
+"""Runs every selected task for every model; finished (model, task) pairs are cached and unfinished ones resume mid-task."""
 from __future__ import annotations
 
 import json
@@ -8,6 +8,7 @@ import traceback
 from pathlib import Path
 
 from .backends import load_backend
+from .checkpoint import CheckpointedBackend
 from .data import load_task
 from .judges.common import JudgeCache, make_judge
 from .schema import ModelSpec, TaskSpec
@@ -83,6 +84,9 @@ class Runner:
                     self._write(m, t, "skipped", error=reason)
                     self.log(f"{tag}: skipped - {reason}")
                     continue
+                ppath = mpath.parent / f"{slug(t.name)}.partial.jsonl"  # answers saved so far, for mid-task resume
+                if force:
+                    ppath.unlink(missing_ok=True)
                 t0 = time.time()
                 try:
                     samples, shots = self._data(t)
@@ -100,8 +104,9 @@ class Runner:
                     task = TASK_TYPES[t.type](t, self.cfg)
                     if t.type == "judge":
                         task.judge, task.cache = self.judge, self.judge_cache
-                    records, metrics = task.run(backend, samples, shots)
+                    records, metrics = task.run(CheckpointedBackend(backend, ppath, tag), samples, shots)
                     self._write(m, t, "ok", metrics, records, seconds=time.time() - t0, n=len(samples))
+                    ppath.unlink(missing_ok=True)
                     pm = task.primary_metric
                     self.log(f"{tag}: {pm}={metrics.get(pm, float('nan')):.4f} (n={len(samples)}, {time.time()-t0:.0f}s)")
                 except Exception as e:

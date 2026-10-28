@@ -44,7 +44,7 @@ class VLLMBackend(Backend):
     def generate(self, prompts, max_new_tokens=256, stop=None):
         from vllm import SamplingParams
         sp = SamplingParams(max_tokens=max_new_tokens, temperature=0, stop=stop or None)
-        res = self.llm.generate(prompts, sp, use_tqdm=True)
+        res = self.llm.generate(prompts, sp, use_tqdm=False)  # araeval draws its own per-task bar
         return [truncate_at_stop(r.outputs[0].text, stop) for r in res]
 
     def close(self):
