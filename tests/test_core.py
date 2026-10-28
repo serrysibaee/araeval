@@ -1,4 +1,5 @@
 """Offline unit tests (no downloads): python -m pytest tests  (or python tests/test_core.py)."""
+import json
 import sys
 from pathlib import Path
 
@@ -91,6 +92,27 @@ def test_dummy_end_to_end(tmp_path=None):
     run_dir = r.run()
     rep = build_report(run_dir, print_summary=False)
     assert rep["leaderboard"][0]["model"] == "dummy" and len(rep["results"]) >= 1
+
+
+def test_failed_model_load_not_retried_per_task(tmp_path=None):
+    import tempfile
+    import araeval.runner as rm
+    from araeval.runner import Runner
+    out = Path(tmp_path or tempfile.mkdtemp())
+    specs = [TaskSpec(name=f"toy{i}", hf_id="-", type="mcq", category="Toy",
+                      fields={"question": "q", "choices": ["a", "b"], "answer": "ans", "answer_format": "index0"})
+             for i in range(3)]
+    samples = to_samples(specs[0], [(None, {"q": "س", "a": "نعم", "b": "لا", "ans": 0})])
+    cfg = {"output_dir": str(out), "run_name": "t", "mcq_mode": "loglik", "letters": "arabic"}
+    r = Runner([ModelSpec(name="broken", path="-", backend="dummy")], specs, cfg, log=lambda *_: None)
+    for s in specs:
+        r._data_cache[s.name] = (samples, [])
+    calls = []
+    rm.load_backend = lambda m: calls.append(m) or (_ for _ in ()).throw(ValueError("needs trust_remote_code"))
+    run_dir = r.run()
+    assert len(calls) == 1
+    errs = [json.loads(p.read_text())["error"] for p in Path(run_dir).glob("raw/broken/*.metrics.json")]
+    assert len(errs) == 3 and all("needs trust_remote_code" in e for e in errs), errs
 
 
 if __name__ == "__main__":

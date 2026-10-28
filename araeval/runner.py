@@ -68,7 +68,7 @@ class Runner:
         total = len(self.models) * len(self.tasks)
         k = 0
         for m in self.models:
-            backend = None
+            backend = load_err = None
             for t in self.tasks:
                 k += 1
                 mpath, _ = self._paths(m, t)
@@ -89,8 +89,14 @@ class Runner:
                     if not samples:
                         raise RuntimeError("no usable samples after mapping/filters")
                     if backend is None:
+                        if load_err:  # don't reload a model that already failed for this run
+                            raise RuntimeError(f"model failed to load: {load_err}")
                         self.log(f"loading model {m.name} ({m.path}) ...")
-                        backend = load_backend(m)
+                        try:
+                            backend = load_backend(m)
+                        except Exception as e:
+                            load_err = f"{type(e).__name__}: {e}"
+                            raise
                     task = TASK_TYPES[t.type](t, self.cfg)
                     if t.type == "judge":
                         task.judge, task.cache = self.judge, self.judge_cache

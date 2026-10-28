@@ -5,7 +5,7 @@
 # Gated repos (Jais-2, NileChat, Gemma) need `huggingface-cli login` with accepted terms.
 models:
   # ---- Tiny (< 1B)
-  - {name: Jais-3-0.9B, path: inception42/Jais-3-0.9B, type: instruct, tier: Tiny, arabic_category: Arabic-specific, max_model_len: 8192}
+  - {name: Jais-3-0.9B, path: inception42/Jais-3-0.9B, type: instruct, tier: Tiny, arabic_category: Arabic-specific, max_model_len: 8192, trust_remote_code: true}
   - {name: Qwen3.5-0.8B, path: Qwen/Qwen3.5-0.8B, type: instruct, tier: Tiny, arabic_category: Multilingual, max_model_len: 8192}
   - {name: Qwen3.5-0.8B-Base, path: Qwen/Qwen3.5-0.8B-Base, type: base, tier: Tiny, arabic_category: Multilingual, max_model_len: 8192}
   - {name: LFM2.5-350M, path: LiquidAI/LFM2.5-350M, type: instruct, tier: Tiny, arabic_category: Multilingual}
@@ -21,7 +21,7 @@ models:
   - {name: SILMA-Kashif-2B, path: silma-ai/SILMA-Kashif-2B-Instruct-v1.0, type: instruct, tier: Small, arabic_category: Arabic-specific}
 
   # ---- Medium (4B - 10B)
-  # - {name: Jais-3-7B, path: inception42/Jais-3-7B, type: instruct, tier: Medium, arabic_category: Arabic-specific, max_model_len: 8192}
+  # - {name: Jais-3-7B, path: inception42/Jais-3-7B, type: instruct, tier: Medium, arabic_category: Arabic-specific, max_model_len: 8192, trust_remote_code: true}
   # - {name: Jais-2-8B-Chat, path: inception42/Jais-2-8B-Chat, type: instruct, tier: Medium, arabic_category: Arabic-specific, max_model_len: 8192}
   # - {name: ALLaM-7B, path: ALLaM-AI/ALLaM-7B-Instruct-preview, type: instruct, tier: Medium, arabic_category: Arabic-specific}
   # - {name: Karnak-6B, path: Applied-Innovation-Center/Karnak-6B-v1.0, type: instruct, tier: Medium, arabic_category: Arabic-specific}
