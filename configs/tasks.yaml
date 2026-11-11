@@ -1,6 +1,9 @@
 # araeval task registry: one entry per evaluation task.
-# Field mappings use the real Hub column names (checked 2026-10-21 via the datasets-server API).
-# Add a dataset = add an entry here (see README "Adding a dataset"). `tags: [core]` = proposed core suite.
+# Field mappings use the real Hub column names (checked via the datasets-server API).
+# tags: full = the selected suite for the <=4B study (20 tasks, six categories; see docs/full_eval_selection.md)
+#       supplementary = passes the quality gates but redundant or outside the six categories
+# categories: Knowledge | Culture & dialects | Linguistic competence | Reasoning |
+#             Instruction & generation | Trust & safety (+ two supplementary groups)
 tasks:
 
 # ---------------------------------------------------------------- Knowledge & exams
@@ -8,77 +11,76 @@ tasks:
   source_name: ArabicMMLU
   hf_id: MBZUAI/ArabicMMLU
   type: mcq
-  category: Knowledge & exams
+  category: "Knowledge"
   configs: [All]
   split: test
   fewshot_split: dev
   fields: {question: Question, context: Context, choices: [Option 1, Option 2, Option 3, Option 4, Option 5], answer: Answer Key, answer_format: letter}
   group_by: Subject
-  tags: [knowledge]
+  tags: [supplementary, knowledge]
 
 - name: arabicmmlu_verified
   source_name: ArabicMMLU (verified)
   hf_id: IFM/ArabicMMLU_verified
   type: mcq
-  category: Knowledge & exams
+  category: "Knowledge"
   configs: [All]
   split: test
   fewshot_split: dev
   fields: {question: Question, context: Context, choices: [Option 1, Option 2, Option 3, Option 4, Option 5], answer: Answer Key, answer_format: letter}
   group_by: Subject
-  tags: [core, knowledge]
+  tags: [full, knowledge]
 
 - name: arabic_exams
   source_name: Arabic EXAMS
   hf_id: OALL/Arabic_EXAMS
   type: mcq
-  category: Knowledge & exams
+  category: "Knowledge"
   split: test
   fewshot_split: validation
   fields: {question: question, choices: [A, B, C, D], answer: answer, answer_format: letter}
   group_by: subject
-  tags: [knowledge]
+  tags: [supplementary, knowledge]
 
 - name: include_ar
   source_name: INCLUDE (Arabic subset)
   hf_id: CohereLabs/include-base-44
   type: mcq
-  category: Knowledge & exams
+  category: "Knowledge"
   configs: [Arabic]
   split: test
   fewshot_split: validation
   fields: {question: question, choices: [option_a, option_b, option_c, option_d], answer: answer, answer_format: index0}
   group_by: subject
-  needs_check: answer assumed 0-based (0-3)
-  tags: [knowledge]
+  tags: [full, knowledge]
 
 - name: gat
   source_name: GAT (Saudi aptitude test)
   hf_id: qimma/MCQ_GAT
   type: mcq
-  category: Knowledge & exams
+  category: "Knowledge"
   configs: all
   split: test
   fields: {question: question, choices: choices, answer: index, answer_format: index0}
   group_by: config
-  tags: [core, knowledge]
+  tags: [knowledge]
 
 - name: 3lm_stem
   source_name: 3LM STEM
   hf_id: qimma/MCQ_3LM-STEM
   type: mcq
-  category: Knowledge & exams
+  category: "Knowledge"
   configs: all
   split: test
   fields: {question: question, choices: choices, answer: index, answer_format: index0}
   group_by: config
-  tags: [core, knowledge]
+  tags: [full, knowledge]
 
 - name: global_mmlu_ar
   source_name: Global-MMLU (ar)
   hf_id: CohereLabs/Global-MMLU
   type: mcq
-  category: Knowledge & exams
+  category: "Knowledge"
   configs: [ar]
   split: test
   fewshot_split: dev
@@ -90,7 +92,7 @@ tasks:
   source_name: MMLU-ProX (ar)
   hf_id: li-lab/MMLU-ProX
   type: mcq
-  category: Knowledge & exams
+  category: "Knowledge"
   configs: [ar]
   split: test
   fewshot_split: validation
@@ -102,7 +104,7 @@ tasks:
   source_name: MMLU-ProX (verified)
   hf_id: IFM/MMLU-ProX_verified
   type: mcq
-  category: Knowledge & exams
+  category: "Knowledge"
   configs: [ar]
   split: test
   fewshot_split: validation
@@ -114,7 +116,7 @@ tasks:
   source_name: MMMLU (ar)
   hf_id: openai/MMMLU
   type: mcq
-  category: Knowledge & exams
+  category: "Knowledge"
   configs: [AR_XY]
   split: test
   fields: {question: Question, choices: [A, B, C, D], answer: Answer, answer_format: letter}
@@ -125,7 +127,7 @@ tasks:
   source_name: Arabic_MMLU (OALL, translated)
   hf_id: OALL/Arabic_MMLU
   type: mcq
-  category: Knowledge & exams
+  category: "Knowledge"
   configs: all
   split: test
   fewshot_split: dev
@@ -137,19 +139,19 @@ tasks:
   source_name: AlGhafa Native
   hf_id: OALL/AlGhafa-Arabic-LLM-Benchmark-Native
   type: mcq
-  category: Knowledge & exams
+  category: "Knowledge"
   configs: all
   split: test
   fewshot_split: validation
   fields: {question: query, choices: [sol1, sol2, sol3, sol4, sol5], answer: label, answer_format: index0}
   group_by: config
-  tags: [knowledge]
+  tags: [supplementary, knowledge]
 
 - name: alghafa_translated
   source_name: AlGhafa Translated
   hf_id: OALL/AlGhafa-Arabic-LLM-Benchmark-Translated
   type: mcq
-  category: Knowledge & exams
+  category: "Knowledge"
   configs: all
   split: test
   mcq_style: choice_text
@@ -162,7 +164,7 @@ tasks:
   source_name: ACVA
   hf_id: OALL/ACVA
   type: mcq
-  category: Culture & values
+  category: "Culture & dialects"
   configs: all
   split: test
   instruction: "هل العبارة التالية صحيحة أم خاطئة؟"
@@ -174,20 +176,20 @@ tasks:
   source_name: ArabCulture
   hf_id: MBZUAI/ArabCulture
   type: mcq
-  category: Culture & values
+  category: "Culture & dialects"
   configs: all
   split: test
   instruction: "اختر التكملة الأنسب ثقافياً للعبارة التالية."
   fields: {question: first_statement, choices: options, answer: answer_key.english_answer_key, answer_format: letter}
   filters: {should_discard: "No"}
   group_by: config
-  tags: [core, culture]
+  tags: [full, culture]
 
 - name: aradice_culture
   source_name: AraDiCE-Culture
   hf_id: QCRI/AraDiCE-Culture
   type: mcq
-  category: Culture & values
+  category: "Culture & dialects"
   enabled: false
   disabled_reason: released split has no answer column (QID, Question, Option A-C only)
 
@@ -195,7 +197,7 @@ tasks:
   source_name: ArabCulture-Dialogue
   hf_id: Almheiri/ArabCulture-Dialogue
   type: mcq
-  category: Culture & values
+  category: "Culture & dialects"
   enabled: false
   disabled_reason: released rows hold dialogues but no options/answer key; needs the paper's task code
 
@@ -203,7 +205,7 @@ tasks:
   source_name: PalmX 2025 – Culture
   hf_id: UBC-NLP/palmx_2025_subtask1_culture
   type: mcq
-  category: Culture & values
+  category: "Culture & dialects"
   enabled: false
   disabled_reason: schema not inspectable via dataset viewer (gated); add mapping after accepting terms
 
@@ -211,7 +213,7 @@ tasks:
   source_name: PalmX 2025 – Islamic
   hf_id: UBC-NLP/palmx_2025_subtask2_islamic
   type: mcq
-  category: Culture & values
+  category: "Culture & dialects"
   enabled: false
   disabled_reason: schema not inspectable via dataset viewer (gated); add mapping after accepting terms
 
@@ -219,7 +221,7 @@ tasks:
   source_name: BLEnD (Arabic regions)
   hf_id: nayeon212/BLEnD
   type: generate
-  category: Culture & values
+  category: "Culture & dialects"
   enabled: false
   disabled_reason: short-answer scoring needs BLEnD's per-language annotation matching
 
@@ -227,7 +229,7 @@ tasks:
   source_name: Alyah (Emirati)
   hf_id: IFM/alyah-emirati-benchmark_verified
   type: mcq
-  category: Culture & values
+  category: "Culture & dialects"
   enabled: false
   disabled_reason: verified release is an index (row/status/fingerprint) into a source dataset
 
@@ -236,39 +238,39 @@ tasks:
   source_name: AraTrust
   hf_id: asas-ai/AraTrust
   type: mcq
-  category: Safety & trust
+  category: "Trust & safety"
   split: test
   fields: {question: Question, choices: [A, B, C], answer: Answer, answer_format: arabic_letter, strip_option_labels: true}
   group_by: Category
-  tags: [core, safety]
+  tags: [full, safety]
 
 # ---------------------------------------------------------------- Dialects
 - name: dialectal_mmlu
   source_name: Dialectal Arabic MMLU
   hf_id: MBZUAI/Dialectal-Arabic-MMLU
   type: mcq
-  category: Dialects
+  category: "Culture & dialects"
   split: test
   fields: {question: question, choices: choices, answer: answer, answer_format: index0}
   group_by: dialect
-  tags: [core, dialect]
+  tags: [full, dialect]
 
 - name: aradice_mmlu_egy
   source_name: AraDiCE ArabicMMLU (egy/lev)
   hf_id: QCRI/AraDICE-ArabicMMLU-egy
   type: mcq
-  category: Dialects
+  category: "Culture & dialects"
   configs: all
   split: test
   fields: {question: question, context: context, choices: options, answer: Answer Key, answer_format: letter}
   group_by: Group
-  tags: [dialect]
+  tags: [supplementary, dialect]
 
 - name: aradice_mmlu_lev
   source_name: AraDiCE ArabicMMLU (egy/lev)
   hf_id: QCRI/AraDICE-ArabicMMLU-lev
   type: mcq
-  category: Dialects
+  category: "Culture & dialects"
   configs: all
   split: test
   fields: {question: question, context: context, choices: options, answer: Answer Key, answer_format: letter}
@@ -279,19 +281,19 @@ tasks:
   source_name: AraDiCE PIQA/BoolQ/Wino/OBQA
   hf_id: QCRI/AraDiCE-PIQA
   type: mcq
-  category: Dialects
+  category: "Culture & dialects"
   configs: [PIQA-egy, PIQA-lev, PIQA-msa]
   split: test
   mcq_style: choice_text
   fields: {question: goal, choices: [sol1, sol2], answer: label, answer_format: index0}
   group_by: config
-  tags: [dialect]
+  tags: [full, dialect]
 
 - name: aradice_boolq_wino_obqa
   source_name: AraDiCE PIQA/BoolQ/Wino/OBQA
   hf_id: QCRI/AraDiCE-BoolQ
   type: mcq
-  category: Dialects
+  category: "Culture & dialects"
   enabled: false
   disabled_reason: schemas of AraDiCE-BoolQ / -WinoGrande / -OpenBookQA not mapped yet
 
@@ -299,19 +301,19 @@ tasks:
   source_name: DarijaMMLU
   hf_id: MBZUAI-Paris/DarijaMMLU
   type: mcq
-  category: Dialects
+  category: "Culture & dialects"
   configs: all
   split: test
   fewshot_split: dev
   fields: {question: question, context: context, choices: choices, answer: answer, answer_format: index0}
   group_by: config
-  tags: [dialect]
+  tags: [supplementary, dialect]
 
 - name: darija_hellaswag
   source_name: DarijaHellaSwag
   hf_id: MBZUAI-Paris/DarijaHellaSwag
   type: mcq
-  category: Dialects
+  category: "Culture & dialects"
   split: validation
   mcq_style: choice_text
   fields: {question: ctx, choices: endings, answer: label, answer_format: index0}
@@ -323,69 +325,69 @@ tasks:
   source_name: Belebele (arb + 5 dialects)
   hf_id: facebook/belebele
   type: mcq
-  category: Reading & NLU
+  category: "Culture & dialects"
   configs: [arb_Arab, acm_Arab, apc_Arab, ars_Arab, ary_Arab, arz_Arab]
   split: test
   fields: {context: flores_passage, question: question, choices: [mc_answer1, mc_answer2, mc_answer3, mc_answer4], answer: correct_answer_num, answer_format: index1}
   group_by: config
-  tags: [core, reading, dialect]
+  tags: [full, reading, dialect]
 
 - name: arcd
   source_name: ARCD
   hf_id: hsseinmz/arcd
   type: generate
-  category: Reading & NLU
+  category: "Supplementary: reading QA"
   split: validation
   preprocess: arcd
   instruction: "أجب عن السؤال باستخراج الإجابة من النص بأقل عدد من الكلمات."
   fields: {question: question, context: context}
   metrics: [f1, em]
   max_new_tokens: 64
-  tags: [reading]
+  tags: [supplementary, reading]
 
 - name: tydiqa_goldp_ar
   source_name: TyDi QA GoldP (ar)
   hf_id: google-research-datasets/tydiqa
   type: generate
-  category: Reading & NLU
+  category: "Supplementary: reading QA"
   configs: [secondary_task]
   split: validation
   preprocess: tydiqa_ar
   instruction: "أجب عن السؤال باستخراج الإجابة من النص بأقل عدد من الكلمات."
   metrics: [f1, em]
   max_new_tokens: 64
-  tags: [reading]
+  tags: [supplementary, reading]
 
 - name: xnli_ar
   source_name: XNLI (ar)
   hf_id: facebook/xnli
   type: mcq
-  category: Reading & NLU
+  category: "Reasoning"
   configs: [ar]
   split: test
   mcq_style: choice_text
   fields: {question: "{premise}\nسؤال: هل يلزم من ذلك أن: {hypothesis}؟ الإجابة:", choices: {fixed: ["صحيح", "ربما", "خطأ"]}, answer: label, answer_format: index0}
-  tags: [reading, translated]
+  tags: [supplementary, reading, translated]
 
 - name: xstorycloze_ar
   source_name: XStoryCloze (ar)
   hf_id: juletxara/xstory_cloze
   type: mcq
-  category: Reading & NLU
+  category: "Reasoning"
   configs: [ar]
   split: eval
   mcq_style: choice_text
   fields: {question: "{input_sentence_1} {input_sentence_2} {input_sentence_3} {input_sentence_4}", choices: [sentence_quiz1, sentence_quiz2], answer: answer_right_ending, answer_format: index1}
-  tags: [reading, translated]
+  tags: [full, reading, translated]
 
 - name: arabicsense
   source_name: ArabicSense
   hf_id: Kamyar-zeinalipour/ArabicSense
   type: mcq
-  category: Reading & NLU
+  category: "Reasoning"
   split: test
   preprocess: arabicsense
-  tags: [reading]
+  tags: [full, reading]
 
 - name: arabicaqa
   source_name: ArabicaQA
@@ -400,29 +402,29 @@ tasks:
   source_name: MadinahQA
   hf_id: MBZUAI/MadinahQA
   type: mcq
-  category: Linguistic competence
+  category: "Linguistic competence"
   configs: all
   split: test
   fewshot_split: dev
   fields: {question: Question, context: Context, choices: [Option 1, Option 2, Option 3, Option 4, Option 5], answer: Answer Key, answer_format: letter}
   group_by: config
-  tags: [core, linguistic]
+  tags: [full, linguistic]
 
 - name: aralingbench
   source_name: AraLingBench
   hf_id: hammh0a/AraLingBench
   type: mcq
-  category: Linguistic competence
+  category: "Linguistic competence"
   split: train
   fields: {question: question, choices: options, answer: answer, answer_format: text}
   group_by: label
-  tags: [core, linguistic]
+  tags: [full, linguistic]
 
 - name: nahw_mcq
   source_name: Nahw-MCQ
   hf_id: MohamedRashad/Nahw-MCQ
   type: mcq
-  category: Linguistic competence
+  category: "Linguistic competence"
   split: test
   preprocess: nahw_mcq
   needs_check: release has no answer column; option A assumed correct (options shuffled deterministically)
@@ -432,28 +434,28 @@ tasks:
   source_name: Fann or Flop MCQ (verified)
   hf_id: IFM/FannOrFlop-MCQ_verified
   type: mcq
-  category: Linguistic competence
+  category: "Linguistic competence"
   configs: all
   split: test
   fields: {question: question, choices: options, answer: correct_answer, answer_format: arabic_letter, choices_in_question: true}
   group_by: config
-  tags: [core, linguistic, poetry]
+  tags: [full, linguistic, poetry]
 
 - name: kinayat
   source_name: Kinayat
   hf_id: menaattia/Kinayat
   type: mcq
-  category: Linguistic competence
+  category: "Linguistic competence"
   split: test
   preprocess: kinayat
   needs_check: only the 150 of 325 rows that have a distractor idiom are usable as MCQ
-  tags: [core, linguistic, dialect]
+  tags: [full, linguistic, dialect]
 
 - name: poetry_meter
   source_name: Arabic Poetry Meter Classification
   hf_id: PoetryMTEB/ArabicPoetryMeterClassification
   type: mcq
-  category: Linguistic competence
+  category: "Linguistic competence"
   split: test
   preprocess: poetry_meter
   instruction: "ما البحر الشعري (العروضي) لهذا البيت؟"
@@ -464,7 +466,7 @@ tasks:
   source_name: Nahw-Correctness
   hf_id: MohamedRashad/Nahw-Correctness
   type: generate
-  category: Linguistic competence
+  category: "Linguistic competence"
   split: test
   preprocess: nahw_correctness
   instruction: "يحتوي النص التالي على خطأ لغوي واحد. اكتب الكلمة بعد تصحيحها فقط."
@@ -478,7 +480,7 @@ tasks:
   source_name: QALB 2015 (L2)
   hf_id: RanaGaber/QALB-2015-L2
   type: generate
-  category: Linguistic competence
+  category: "Linguistic competence"
   split: test
   preprocess: qalb
   instruction: "صحّح الأخطاء الإملائية والنحوية في النص التالي، وأعد كتابته كاملاً دون أي تعليق:"
@@ -493,7 +495,7 @@ tasks:
   source_name: Fann or Flop
   hf_id: omkarthawakar/FannOrFlop
   type: judge
-  category: Linguistic competence
+  category: "Linguistic competence"
   split: train
   preprocess: fann_or_flop
   instruction: "اشرح القصيدة التالية شرحاً وافياً، مبيّناً المعاني والصور البلاغية:"
@@ -501,14 +503,14 @@ tasks:
   max_new_tokens: 1500
   limit: 200
   requires: instruct
-  tags: [linguistic, poetry, judge]
+  tags: [supplementary, linguistic, poetry, judge]
 
 # ---------------------------------------------------------------- Math & reasoning
 - name: arabic_gsm8k
   source_name: Arabic GSM8K
   hf_id: Omartificial-Intelligence-Space/Arabic-gsm8k
   type: generate
-  category: Math & reasoning
+  category: "Reasoning"
   split: main_test
   fewshot_split: main_train
   num_fewshot: 5
@@ -521,31 +523,31 @@ tasks:
   source_name: Arabic GSM8K (verified)
   hf_id: IFM/Arabic-gsm8k_verified
   type: generate
-  category: Math & reasoning
+  category: "Reasoning"
   split: main_test
   fewshot_split: main_train
   num_fewshot: 5
   fields: {question: question, gold: answer}
   metrics: [numeric_em]
   max_new_tokens: 512
-  tags: [core, math]
+  tags: [full, math]
 
 - name: gatmath
   source_name: GATmath (verified)
   hf_id: IFM/GATmath_verified
   type: mcq
-  category: Math & reasoning
+  category: "Reasoning"
   configs: all
   split: test
   fields: {question: السؤال, choices: [أ, ب, ج, د], answer: الإجابة_الصحيحة, answer_format: arabic_letter}
   group_by: config
-  tags: [core, math]
+  tags: [full, math]
 
 - name: qias2025
   source_name: QIAS 2025
   hf_id: IFM/QIAS2025_verified
   type: mcq
-  category: Math & reasoning
+  category: "Reasoning"
   enabled: false
   disabled_reason: verified release is an index (row/status/fingerprint) into a source dataset
 
@@ -554,44 +556,44 @@ tasks:
   source_name: Arabic IFEval
   hf_id: inception42/Arabic-IFEval
   type: ifeval
-  category: Instruction following & generation
+  category: "Instruction & generation"
   split: train
   preprocess: arabic_ifeval
   max_new_tokens: 1280
   requires: instruct
-  tags: [core, instruction]
+  tags: [full, instruction]
 
 - name: aragen
   source_name: AraGen (3C3H)
   hf_id: inception42/AraGen
   type: judge
-  category: Instruction following & generation
+  category: "Instruction & generation"
   configs: [AraGen-03-25]
   split: test
   preprocess: aragen
   judge_rubric: aragen_3c3h
   max_new_tokens: 1024
   requires: instruct
-  tags: [core, instruction, judge]
+  tags: [full, instruction, judge]
 
 - name: aya_eval_ar
   source_name: Aya Evaluation Suite (ar)
   hf_id: CohereLabs/aya_evaluation_suite
   type: judge
-  category: Instruction following & generation
+  category: "Instruction & generation"
   configs: [aya_human_annotated]
   split: test
   preprocess: aya_ar
   judge_rubric: reference_1to5
   max_new_tokens: 1024
   requires: instruct
-  tags: [instruction, judge]
+  tags: [full, instruction, judge]
 
 - name: abbl
   source_name: ABBL (SILMA)
   hf_id: silma-ai/arabic-broad-benchmark
   type: judge
-  category: Instruction following & generation
+  category: "Instruction & generation"
   enabled: false
   disabled_reason: 22 skills with mixed scoring; use ABBL's own scripts or map per skill
 
@@ -600,7 +602,7 @@ tasks:
   source_name: WMT24++ (en–ar)
   hf_id: google/wmt24pp
   type: generate
-  category: Translation & summarisation
+  category: "Instruction & generation"
   configs: [en-ar_EG, en-ar_SA]
   split: train
   preprocess: wmt_ar
@@ -609,13 +611,13 @@ tasks:
   primary_metric: chrf
   max_new_tokens: 512
   requires: instruct
-  tags: [translation]
+  tags: [full, translation]
 
 - name: arabench_dia_en
   source_name: AraBench
   hf_id: arbml/AraBench
   type: generate
-  category: Translation & summarisation
+  category: "Instruction & generation"
   split: validation
   data_files: {validation: data/validation-00000-of-00001.parquet}
   needs_check: test parquet has lowercase column names that break loading, so the validation split is used
@@ -626,13 +628,13 @@ tasks:
   max_new_tokens: 256
   limit: 2000
   requires: instruct
-  tags: [translation, dialect]
+  tags: [supplementary, translation, dialect]
 
 - name: flores_ar
   source_name: FLORES+ (arb, dialects)
   hf_id: openlanguagedata/flores_plus
   type: generate
-  category: Translation & summarisation
+  category: "Instruction & generation"
   enabled: false
   disabled_reason: gated; needs pairing of eng_Latn and arb_Arab configs by id (preprocessor not written yet)
 
@@ -640,7 +642,7 @@ tasks:
   source_name: XL-Sum (ar)
   hf_id: csebuetnlp/xlsum
   type: generate
-  category: Translation & summarisation
+  category: "Instruction & generation"
   enabled: false
   disabled_reason: repo still uses a loading script (xlsum.py), which datasets>=4 cannot run
   configs: [arabic]
@@ -659,18 +661,18 @@ tasks:
   source_name: MedArabiQ
   hf_id: qimma/MCQ_MedArabiQ
   type: mcq
-  category: "Domain: medical & legal"
+  category: "Supplementary: medical & legal"
   configs: all
   split: test
   fields: {question: question, choices: choices, answer: index, answer_format: index0}
   group_by: config
-  tags: [domain, medical]
+  tags: [supplementary, domain, medical]
 
 - name: medarabench
   source_name: MedAraBench
   hf_id: qimma/MCQ_MedAraBench
   type: mcq
-  category: "Domain: medical & legal"
+  category: "Supplementary: medical & legal"
   configs: all
   split: test
   fields: {question: question, choices: choices, answer: index, answer_format: index0}
@@ -681,7 +683,7 @@ tasks:
   source_name: MizanQA
   hf_id: qimma/MCQ_MizanQA
   type: mcq
-  category: "Domain: medical & legal"
+  category: "Supplementary: medical & legal"
   split: test
   preprocess: mizanqa
   fields: {question: question, choices: choices}
@@ -692,20 +694,20 @@ tasks:
   source_name: ArabLegalEval
   hf_id: qimma/QA_ArabLegalEval
   type: generate
-  category: "Domain: medical & legal"
+  category: "Supplementary: medical & legal"
   split: test
   preprocess: legal_qa
   metrics: [f1, rouge]
   primary_metric: f1
   max_new_tokens: 256
   requires: instruct
-  tags: [domain, legal]
+  tags: [supplementary, domain, legal]
 
 - name: alarb_verdict
   source_name: ALARB
   hf_id: THIQAH-RD/ALARB
   type: judge
-  category: "Domain: medical & legal"
+  category: "Supplementary: medical & legal"
   split: test
   preprocess: alarb
   instruction: "بناءً على وقائع القضية التالية، ما الحكم المتوقع من المحكمة؟ اكتب الحكم باختصار."
@@ -713,13 +715,13 @@ tasks:
   max_new_tokens: 512
   limit: 300
   requires: instruct
-  tags: [domain, legal, judge]
+  tags: [supplementary, domain, legal, judge]
 
 - name: arabic_enterprise
   source_name: Arabic Enterprise (verified)
   hf_id: IFM/arabic-enterprise_verified
   type: judge
-  category: "Domain: medical & legal"
+  category: "Supplementary: medical & legal"
   enabled: false
   disabled_reason: style/fact-constrained generation; needs a dedicated rubric
 
@@ -727,6 +729,6 @@ tasks:
   source_name: IslamicEval 2025 – Subtask 1B
   hf_id: IFM/IslamicEval2025-Subtask1B_verified
   type: mcq
-  category: Culture & values
+  category: "Culture & dialects"
   enabled: false
   disabled_reason: span-level citation verification; needs the shared-task scorer

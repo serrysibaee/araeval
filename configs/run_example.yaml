@@ -3,7 +3,8 @@ run_name: slm_core_2026-10
 output_dir: results
 models: configs/models.yaml          # .yaml, .csv (e.g. slm_candidates.csv) or .txt (one HF id per line)
 
-select: [core]                       # task names, tags or categories; "all" for every enabled task
+select: [full]                       # task names, tags or categories; "all" for every enabled task
+model_select: [core, control]        # model sets / names / families; "all" for every model
 limit: null                          # e.g. 200 for a quick pass (deterministic subsample per task)
 
 letters: arabic                      # option letters: arabic (أ ب ج د) or latin (A B C D)

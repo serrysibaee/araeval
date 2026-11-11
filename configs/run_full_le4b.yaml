@@ -1,0 +1,26 @@
+# Full evaluation of Arabic-capable models <= 4B on the selected 20-task suite (six categories).
+# Selection method and lists: docs/full_eval_selection.md
+#   python -m araeval models --config configs/run_full_le4b.yaml     # preview the model list
+#   python -m araeval check  --config configs/run_full_le4b.yaml     # verify all 20 datasets load
+#   python -m araeval run    --config configs/run_full_le4b.yaml     # run (resumable)
+run_name: full_le4b_2026-11
+output_dir: results
+models: configs/models.yaml
+
+model_select: [core, control]   # 61 core checkpoints + 2 controls; add `extended` for earlier generations
+model_exclude: []               # [edge_total_gt4b] applies a strict 4.0B total-parameter cap (drops 5)
+
+select: [full]                  # the 20 selected tasks; [full, supplementary] adds the 13 supplementary ones
+limit: null
+
+letters: arabic
+mcq_mode: loglik                # same scoring for base and instruct models; run again with `generate` for instruct-only format checks
+mcq_max_new_tokens: 32
+
+allow_judge: false              # true -> AraGen (340) + Aya (250) = 590 judge calls per instruct model
+judge:
+  provider: anthropic
+  model: claude-opus-5-5
+  effort: medium
+  concurrency: 8
+seed: 1234

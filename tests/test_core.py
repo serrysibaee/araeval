@@ -177,6 +177,41 @@ def test_checkpoint_generate_keys_on_settings(tmp_path=None):
     assert inner.calls == [2, 1]                                        # different settings -> recomputed
 
 
+def test_model_selection():
+    from araeval.config import select_models
+    ms = [ModelSpec(name="a", path="o/a", type="instruct", meta={"set": "core", "edge_total_gt4b": True}),
+          ModelSpec(name="b", path="o/b", type="base", meta={"set": "core"}),
+          ModelSpec(name="c", path="o/c", type="instruct", meta={"set": "control"})]
+    names = lambda xs: [m.name for m in xs]
+    assert names(select_models(ms, ["core"])) == ["a", "b"]
+    assert names(select_models(ms, "core,control", ["edge_total_gt4b"])) == ["b", "c"]
+    assert names(select_models(ms, "all", "base")) == ["a", "c"]
+
+
+def test_chat_template_kwargs_passed():
+    from araeval.backends.base import Backend
+
+    class Tok:
+        chat_template = "x"
+
+        def apply_chat_template(self, msgs, tokenize, add_generation_prompt, **kw):
+            return f"{msgs[-1]['content']}|{kw}"
+
+    b = Backend(ModelSpec(name="q", path="-", type="instruct", chat_template_kwargs={"enable_thinking": False}))
+    b.tokenizer = Tok()
+    assert b.format_prompt("hi") == "hi|{'enable_thinking': False}"
+
+
+def test_registry_full_suite():
+    from araeval.config import load_tasks, select_tasks
+    tasks = load_tasks(Path(__file__).resolve().parent.parent / "configs" / "tasks.yaml")
+    full = select_tasks(tasks, ["full"])
+    cats = {t.category for t in full}
+    assert len(full) == 20 and all(t.enabled for t in full)
+    assert cats == {"Knowledge", "Culture & dialects", "Linguistic competence", "Reasoning",
+                    "Instruction & generation", "Trust & safety"}
+
+
 if __name__ == "__main__":
     for name, fn in list(globals().items()):
         if name.startswith("test_"):

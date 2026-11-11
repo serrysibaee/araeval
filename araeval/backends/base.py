@@ -20,7 +20,8 @@ class Backend:
         if self.spec.system_prompt:
             msgs.append({"role": "system", "content": self.spec.system_prompt})
         msgs.append({"role": "user", "content": user_text})
-        return tok.apply_chat_template(msgs, tokenize=False, add_generation_prompt=True)
+        return tok.apply_chat_template(msgs, tokenize=False, add_generation_prompt=True,
+                                       **(self.spec.chat_template_kwargs or {}))
 
     # --- scoring / generation --------------------------------------------------------
     def loglikelihood(self, requests: list[tuple[str, str]]) -> list[float]:

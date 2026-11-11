@@ -1,0 +1,133 @@
+﻿family,size,model_id,type,arabic_category,set,release,total_params,edge_total_gt4b,gated,architecture,native_ctx,arabic_evidence,options
+Jais 3,0.9B,inception42/Jais-3-0.9B,instruct,Arabic-specific,core,2026-09,1078285824,False,False,K2HorizonForCausalLM,131072,Arabic-centric family (IFM),"{""trust_remote_code"": true}"
+Jais 3,3.7B,inception42/Jais-3-3.7B,instruct,Arabic-specific,core,2026-09,5058255360,True,False,K2HorizonForCausalLM,524288,Arabic-centric family (IFM),"{""trust_remote_code"": true}"
+NileChat,3B,UBC-NLP/NileChat-3B-Base,base,Arabic-specific,core,2025-05,3397103616,False,auto,Qwen2ForCausalLM,32768,Egyptian & Moroccan Arabic LLM,{}
+NileChat,3B,UBC-NLP/NileChat-3B,instruct,Arabic-specific,core,2025-05,3397103616,False,auto,Qwen2ForCausalLM,32768,Egyptian & Moroccan Arabic LLM,{}
+Hala,350M,hammh0a/Hala-350M,instruct,Arabic-specific,core,2025-09,354483968,False,False,Lfm2ForCausalLM,128000,Arabic-centric instruction models (Hala tech report),{}
+Hala,700M,hammh0a/Hala-700M,instruct,Arabic-specific,core,2025-09,742489344,False,False,Lfm2ForCausalLM,128000,Arabic-centric instruction models (Hala tech report),{}
+Hala,1.2B,hammh0a/Hala-1.2B,instruct,Arabic-specific,core,2025-09,1170340608,False,False,Lfm2ForCausalLM,128000,Arabic-centric instruction models (Hala tech report),{}
+Atlas-Chat,2B,MBZUAI-Paris/Atlas-Chat-2B,instruct,Arabic-specific,core,2024-09,2614341888,False,False,Gemma2ForCausalLM,8192,Moroccan Darija instruction model,{}
+SILMA Kashif,2B,silma-ai/SILMA-Kashif-2B-Instruct-v1.0,instruct,Arabic-specific,core,2025-01,2614341888,False,False,Gemma2ForCausalLM,12288,Arabic RAG model (Gemma-2-2B),{}
+Jais family,590M,inceptionai/jais-family-590m,base,Arabic-specific,extended,2024-08,771102732,False,False,JAISLMHeadModel,2048,"Arabic-English, from scratch","{""trust_remote_code"": true}"
+Jais family,590M,inceptionai/jais-family-590m-chat,instruct,Arabic-specific,extended,2024-08,771102732,False,False,JAISLMHeadModel,2048,"Arabic-English, from scratch","{""trust_remote_code"": true}"
+Jais family,1.3B,inceptionai/jais-family-1p3b,base,Arabic-specific,extended,2024-08,1558368784,False,auto,JAISLMHeadModel,2048,"Arabic-English, from scratch","{""trust_remote_code"": true}"
+Jais family,1.3B,inceptionai/jais-family-1p3b-chat,instruct,Arabic-specific,extended,2024-08,1558368784,False,auto,JAISLMHeadModel,2048,"Arabic-English, from scratch","{""trust_remote_code"": true}"
+Jais family,2.7B,inceptionai/jais-family-2p7b,base,Arabic-specific,extended,2024-08,,False,auto,JAISLMHeadModel,2048,"Arabic-English, from scratch","{""trust_remote_code"": true}"
+Jais family,2.7B,inceptionai/jais-family-2p7b-chat,instruct,Arabic-specific,extended,2024-08,2954231828,False,auto,JAISLMHeadModel,2048,"Arabic-English, from scratch","{""trust_remote_code"": true}"
+AraGPT2,135M,aubmindlab/aragpt2-base,base,Arabic-specific,extended,2020,147577344,False,False,GPT2LMHeadModel,1024,77GB Arabic corpus,{}
+AraGPT2,370M,aubmindlab/aragpt2-medium,base,Arabic-specific,extended,2020,394061824,False,False,GPT2LMHeadModel,1024,77GB Arabic corpus,{}
+AraGPT2,792M,aubmindlab/aragpt2-large,base,Arabic-specific,extended,2020,829369856,False,False,AraGPT2LMHeadModel,1024,77GB Arabic corpus,"{""trust_remote_code"": true, ""backend"": ""hf""}"
+AraGPT2,1.46B,aubmindlab/aragpt2-mega,base,Arabic-specific,extended,2020,1510124544,False,False,AraGPT2LMHeadModel,1024,77GB Arabic corpus,"{""trust_remote_code"": true, ""backend"": ""hf""}"
+ArabianGPT,0.1B,riotu-lab/ArabianGPT-01B,base,Arabic-specific,extended,2024,,False,False,GPT2LMHeadModel,768,Arabic GPT-2 from scratch,{}
+ArabianGPT,0.3B,riotu-lab/ArabianGPT-03B,base,Arabic-specific,extended,2024,,False,False,GPT2LMHeadModel,1024,Arabic GPT-2 from scratch,{}
+Qwen3.5,0.8B,Qwen/Qwen3.5-0.8B-Base,base,Multilingual,core,2026-02,873438784,False,False,Qwen3_5ForConditionalGeneration,262144,201 languages and dialects,"{""chat_template_kwargs"": {""enable_thinking"": false}}"
+Qwen3.5,0.8B,Qwen/Qwen3.5-0.8B,instruct,Multilingual,core,2026-02,873438784,False,False,Qwen3_5ForConditionalGeneration,262144,201 languages and dialects,"{""chat_template_kwargs"": {""enable_thinking"": false}}"
+Qwen3.5,2B,Qwen/Qwen3.5-2B-Base,base,Multilingual,core,2026-02,2274069824,False,False,Qwen3_5ForConditionalGeneration,262144,201 languages and dialects,"{""chat_template_kwargs"": {""enable_thinking"": false}}"
+Qwen3.5,2B,Qwen/Qwen3.5-2B,instruct,Multilingual,core,2026-02,2274069824,False,False,Qwen3_5ForConditionalGeneration,262144,201 languages and dialects,"{""chat_template_kwargs"": {""enable_thinking"": false}}"
+Qwen3.5,4B,Qwen/Qwen3.5-4B-Base,base,Multilingual,core,2026-02,4659865088,True,False,Qwen3_5ForConditionalGeneration,262144,201 languages and dialects,"{""chat_template_kwargs"": {""enable_thinking"": false}}"
+Qwen3.5,4B,Qwen/Qwen3.5-4B,instruct,Multilingual,core,2026-02,4659865088,True,False,Qwen3_5ForConditionalGeneration,262144,201 languages and dialects,"{""chat_template_kwargs"": {""enable_thinking"": false}}"
+Gemma 4,E2B,google/gemma-4-E2B,base,Multilingual,core,2026-03,5123178051,True,False,Gemma4ForConditionalGeneration,131072,140+ languages,{}
+Gemma 4,E2B,google/gemma-4-E2B-it,instruct,Multilingual,core,2026-03,5123178051,True,False,Gemma4ForConditionalGeneration,131072,140+ languages,{}
+Granite 4.1,3B,ibm-granite/granite-4.1-3b-base,base,Multilingual,core,2026-04,3402836480,False,False,GraniteForCausalLM,131072,Arabic among 12 supported languages,{}
+Granite 4.1,3B,ibm-granite/granite-4.1-3b,instruct,Multilingual,core,2026-04,3402836480,False,False,GraniteForCausalLM,131072,Arabic among 12 supported languages,{}
+Granite 4.2,3B,ibm-granite/granite-4.2-3b,instruct,Multilingual,core,2026-08,3659737600,False,False,GraniteForCausalLM,131072,Arabic among tested languages,{}
+Granite 4.0,350M,ibm-granite/granite-4.0-350m-base,base,Multilingual,core,2025-10,352379904,False,False,GraniteMoeHybridForCausalLM,32768,Arabic among 12 supported languages,{}
+Granite 4.0,350M,ibm-granite/granite-4.0-350m,instruct,Multilingual,core,2025-10,352379904,False,False,GraniteMoeHybridForCausalLM,32768,Arabic among 12 supported languages,{}
+Granite 4.0,1B,ibm-granite/granite-4.0-1b-base,base,Multilingual,core,2025-10,1631750144,False,False,GraniteMoeHybridForCausalLM,131072,Arabic among 12 supported languages,{}
+Granite 4.0,1B,ibm-granite/granite-4.0-1b,instruct,Multilingual,core,2025-10,1631750144,False,False,GraniteMoeHybridForCausalLM,131072,Arabic among 12 supported languages,{}
+Granite 4.0-H,350M,ibm-granite/granite-4.0-h-350m-base,base,Multilingual,core,2025-10,340332224,False,False,GraniteMoeHybridForCausalLM,32768,Arabic among 12 supported languages,{}
+Granite 4.0-H,350M,ibm-granite/granite-4.0-h-350m,instruct,Multilingual,core,2025-10,340332224,False,False,GraniteMoeHybridForCausalLM,32768,Arabic among 12 supported languages,{}
+Granite 4.0-H,1B,ibm-granite/granite-4.0-h-1b-base,base,Multilingual,core,2025-10,1461538368,False,False,GraniteMoeHybridForCausalLM,131072,Arabic among 12 supported languages,{}
+Granite 4.0-H,1B,ibm-granite/granite-4.0-h-1b,instruct,Multilingual,core,2025-10,1461538368,False,False,GraniteMoeHybridForCausalLM,131072,Arabic among 12 supported languages,{}
+Falcon-H1,0.5B,tiiuae/Falcon-H1-0.5B-Base,base,Multilingual,core,2025-05,521411104,False,False,FalconH1ForCausalLM,16384,18 languages incl. Arabic,{}
+Falcon-H1,0.5B,tiiuae/Falcon-H1-0.5B-Instruct,instruct,Multilingual,core,2025-05,521411104,False,False,FalconH1ForCausalLM,16384,18 languages incl. Arabic,{}
+Falcon-H1,1.5B,tiiuae/Falcon-H1-1.5B-Base,base,Multilingual,core,2025-05,1554859392,False,False,FalconH1ForCausalLM,131072,18 languages incl. Arabic,{}
+Falcon-H1,1.5B,tiiuae/Falcon-H1-1.5B-Instruct,instruct,Multilingual,core,2025-05,1554863488,False,False,FalconH1ForCausalLM,131072,18 languages incl. Arabic,{}
+Falcon-H1,1.5B-Deep,tiiuae/Falcon-H1-1.5B-Deep-Base,base,Multilingual,core,2025-05,1554872208,False,False,FalconH1ForCausalLM,131072,18 languages incl. Arabic,{}
+Falcon-H1,1.5B-Deep,tiiuae/Falcon-H1-1.5B-Deep-Instruct,instruct,Multilingual,core,2025-05,1554874768,False,False,FalconH1ForCausalLM,131072,18 languages incl. Arabic,{}
+Falcon-H1,3B,tiiuae/Falcon-H1-3B-Base,base,Multilingual,core,2025-05,3149387264,False,False,FalconH1ForCausalLM,131072,18 languages incl. Arabic,{}
+Falcon-H1,3B,tiiuae/Falcon-H1-3B-Instruct,instruct,Multilingual,core,2025-05,3149392384,False,False,FalconH1ForCausalLM,131072,18 languages incl. Arabic,{}
+LFM3,1.7B,LiquidAI/LFM3-1.7B-Base,base,Multilingual,core,2026-10,1728801536,False,False,Lfm3ForCausalLM,262144,Card language list includes Arabic,{}
+LFM3,1.7B,LiquidAI/LFM3-1.7B,instruct,Multilingual,core,2026-10,1728801536,False,False,Lfm3ForCausalLM,262144,Card language list includes Arabic,{}
+LFM2.5,230M,LiquidAI/LFM2.5-230M-Base,base,Multilingual,core,2026-06,229693184,False,False,Lfm2ForCausalLM,128000,Card language list includes Arabic,{}
+LFM2.5,230M,LiquidAI/LFM2.5-230M,instruct,Multilingual,core,2026-06,229693184,False,False,Lfm2ForCausalLM,128000,Card language list includes Arabic,{}
+LFM2.5,350M,LiquidAI/LFM2.5-350M-Base,base,Multilingual,core,2026-03,354483968,False,False,Lfm2ForCausalLM,128000,Card language list includes Arabic,{}
+LFM2.5,350M,LiquidAI/LFM2.5-350M,instruct,Multilingual,core,2026-03,354483968,False,False,Lfm2ForCausalLM,128000,Card language list includes Arabic,{}
+LFM2.5,1.2B,LiquidAI/LFM2.5-1.2B-Base,base,Multilingual,core,2026-01,1170340608,False,False,Lfm2ForCausalLM,128000,Card language list includes Arabic,{}
+LFM2.5,1.2B,LiquidAI/LFM2.5-1.2B-Instruct,instruct,Multilingual,core,2026-01,1170340608,False,False,Lfm2ForCausalLM,128000,Card language list includes Arabic,{}
+LFM2.5,2.6B,LiquidAI/LFM2.5-2.6B-Base,base,Multilingual,core,2026-07,2697198592,False,False,Lfm2ForCausalLM,128000,Card language list includes Arabic,{}
+LFM2.5,2.6B,LiquidAI/LFM2.5-2.6B,instruct,Multilingual,core,2026-07,2697198592,False,False,Lfm2ForCausalLM,131072,Card language list includes Arabic,{}
+Apertus v1.1,0.5B,swiss-ai/Apertus-v1.1-0.5B,base,Multilingual,core,2026-03,438349352,False,False,ApertusForCausalLM,4096,"1,811 languages",{}
+Apertus v1.1,0.5B,swiss-ai/Apertus-v1.1-0.5B-Instruct,instruct,Multilingual,core,2026-03,572567080,False,False,ApertusForCausalLM,4096,"1,811 languages",{}
+Apertus v1.1,1.5B,swiss-ai/Apertus-v1.1-1.5B,base,Multilingual,core,2026-02,1510019104,False,False,ApertusForCausalLM,4096,"1,811 languages",{}
+Apertus v1.1,1.5B,swiss-ai/Apertus-v1.1-1.5B-Instruct,instruct,Multilingual,core,2026-02,1510019104,False,False,ApertusForCausalLM,4096,"1,811 languages",{}
+Apertus v1.1,4B,swiss-ai/Apertus-v1.1-4B,base,Multilingual,core,2026-04,3825361968,False,False,ApertusForCausalLM,4096,"1,811 languages",{}
+Apertus v1.1,4B,swiss-ai/Apertus-v1.1-4B-Instruct,instruct,Multilingual,core,2026-04,3825361968,False,False,ApertusForCausalLM,4096,"1,811 languages",{}
+Tiny Aya,3.35B,CohereLabs/tiny-aya-base,base,Multilingual,core,2026-02,3349227520,False,auto,Cohere2ForCausalLM,8192,70 languages incl. Arabic (arXiv 2603.11510),{}
+Tiny Aya,3.35B,CohereLabs/tiny-aya-global,instruct,Multilingual,core,2026-02,3349227520,False,auto,Cohere2ForCausalLM,8192,70 languages incl. Arabic (arXiv 2603.11510),{}
+Tiny Aya,3.35B-Earth,CohereLabs/tiny-aya-earth,instruct,Multilingual,core,2026-02,3349227520,False,auto,Cohere2ForCausalLM,8192,Africa & West Asia variant (incl. Arabic),{}
+Ministral 3,3B,mistralai/Ministral-3-3B-Instruct-2512,instruct,Multilingual,core,2025-12,3849090048,False,False,Mistral3ForConditionalGeneration,262144,Card lists Arabic,{}
+Phi-4-mini,3.8B,microsoft/Phi-4-mini-instruct,instruct,Multilingual,core,2025-02,3836021760,False,False,Phi3ForCausalLM,131072,Card lists Arabic,{}
+Nemotron 3 Nano,4B,nvidia/NVIDIA-Nemotron-3-Nano-4B-BF16,instruct,Multilingual,core,2026-03,3973556832,False,False,NemotronHForCausalLM,262144,Arabic among 15 pretraining languages,"{""chat_template_kwargs"": {""enable_thinking"": false}}"
+EuroLLM,1.7B,utter-project/EuroLLM-1.7B,base,Multilingual,core,2024-09,,False,False,LlamaForCausalLM,4096,Pretraining languages include Arabic,{}
+EuroLLM,1.7B,utter-project/EuroLLM-1.7B-Instruct,instruct,Multilingual,core,2024-09,1656850432,False,False,LlamaForCausalLM,4096,Pretraining languages include Arabic,{}
+EuroMoE,2.6B-A0.6B,utter-project/EuroMoE-2.6B-A0.6B-Instruct-2512,instruct,Multilingual,core,2025-12,2611528704,False,False,MixtralForCausalLM,32768,Card language list includes Arabic,{}
+Qwen3,0.6B,Qwen/Qwen3-0.6B-Base,base,Multilingual,extended,2025-04,596049920,False,False,Qwen3ForCausalLM,32768,119 languages incl. Arabic,"{""chat_template_kwargs"": {""enable_thinking"": false}}"
+Qwen3,0.6B,Qwen/Qwen3-0.6B,instruct,Multilingual,extended,2025-04,751632384,False,False,Qwen3ForCausalLM,40960,119 languages incl. Arabic,"{""chat_template_kwargs"": {""enable_thinking"": false}}"
+Qwen3,1.7B,Qwen/Qwen3-1.7B-Base,base,Multilingual,extended,2025-04,1720574976,False,False,Qwen3ForCausalLM,32768,119 languages incl. Arabic,"{""chat_template_kwargs"": {""enable_thinking"": false}}"
+Qwen3,1.7B,Qwen/Qwen3-1.7B,instruct,Multilingual,extended,2025-04,2031739904,False,False,Qwen3ForCausalLM,40960,119 languages incl. Arabic,"{""chat_template_kwargs"": {""enable_thinking"": false}}"
+Qwen3,4B,Qwen/Qwen3-4B-Base,base,Multilingual,extended,2025-04,4022468096,True,False,Qwen3ForCausalLM,32768,119 languages incl. Arabic,{}
+Qwen3,4B,Qwen/Qwen3-4B-Instruct-2507,instruct,Multilingual,extended,2025-04,4022468096,True,False,Qwen3ForCausalLM,262144,119 languages incl. Arabic,{}
+Qwen2.5,0.5B,Qwen/Qwen2.5-0.5B,base,Multilingual,extended,2024-09,494032768,False,False,Qwen2ForCausalLM,32768,Arabic among 29+ languages,{}
+Qwen2.5,0.5B,Qwen/Qwen2.5-0.5B-Instruct,instruct,Multilingual,extended,2024-09,494032768,False,False,Qwen2ForCausalLM,32768,Arabic among 29+ languages,{}
+Qwen2.5,1.5B,Qwen/Qwen2.5-1.5B,base,Multilingual,extended,2024-09,1543714304,False,False,Qwen2ForCausalLM,131072,Arabic among 29+ languages,{}
+Qwen2.5,1.5B,Qwen/Qwen2.5-1.5B-Instruct,instruct,Multilingual,extended,2024-09,1543714304,False,False,Qwen2ForCausalLM,32768,Arabic among 29+ languages,{}
+Qwen2.5,3B,Qwen/Qwen2.5-3B,base,Multilingual,extended,2024-09,3085938688,False,False,Qwen2ForCausalLM,32768,Arabic among 29+ languages,{}
+Qwen2.5,3B,Qwen/Qwen2.5-3B-Instruct,instruct,Multilingual,extended,2024-09,3085938688,False,False,Qwen2ForCausalLM,32768,Arabic among 29+ languages,{}
+Qwen2,0.5B,Qwen/Qwen2-0.5B,base,Multilingual,extended,2024-06,494032768,False,False,Qwen2ForCausalLM,131072,Arabic among added languages,{}
+Qwen2,0.5B,Qwen/Qwen2-0.5B-Instruct,instruct,Multilingual,extended,2024-06,494032768,False,False,Qwen2ForCausalLM,32768,Arabic among added languages,{}
+Qwen2,1.5B,Qwen/Qwen2-1.5B,base,Multilingual,extended,2024-06,1543714304,False,False,Qwen2ForCausalLM,131072,Arabic among added languages,{}
+Qwen2,1.5B,Qwen/Qwen2-1.5B-Instruct,instruct,Multilingual,extended,2024-06,1543714304,False,False,Qwen2ForCausalLM,32768,Arabic among added languages,{}
+Qwen1.5,0.5B,Qwen/Qwen1.5-0.5B,base,Multilingual,extended,2024-01,619570176,False,False,Qwen2ForCausalLM,32768,Arabic evaluated in release blog,{}
+Qwen1.5,0.5B,Qwen/Qwen1.5-0.5B-Chat,instruct,Multilingual,extended,2024-01,619570176,False,False,Qwen2ForCausalLM,32768,Arabic evaluated in release blog,{}
+Qwen1.5,1.8B,Qwen/Qwen1.5-1.8B,base,Multilingual,extended,2024-01,1836828672,False,False,Qwen2ForCausalLM,32768,Arabic evaluated in release blog,{}
+Qwen1.5,1.8B,Qwen/Qwen1.5-1.8B-Chat,instruct,Multilingual,extended,2024-01,1836828672,False,False,Qwen2ForCausalLM,32768,Arabic evaluated in release blog,{}
+Qwen1.5,4B,Qwen/Qwen1.5-4B,base,Multilingual,extended,2024-01,3950369280,False,False,Qwen2ForCausalLM,32768,Arabic evaluated in release blog,{}
+Qwen1.5,4B,Qwen/Qwen1.5-4B-Chat,instruct,Multilingual,extended,2024-01,3950369280,False,False,Qwen2ForCausalLM,32768,Arabic evaluated in release blog,{}
+Gemma 3n,E2B,google/gemma-3n-E2B-it,instruct,Multilingual,extended,2025-06,5439438272,True,manual,Gemma3nForConditionalGeneration,32768,140+ languages,{}
+Gemma 3,4B,google/gemma-3-4b-pt,base,Multilingual,extended,2025-03,4300079472,True,manual,Gemma3ForConditionalGeneration,32768,140+ languages,{}
+Gemma 3,4B,google/gemma-3-4b-it,instruct,Multilingual,extended,2025-03,4300079472,True,manual,Gemma3ForConditionalGeneration,32768,140+ languages,{}
+Granite 4.0,3B-micro,ibm-granite/granite-4.0-micro-base,base,Multilingual,extended,2025-09,3402836480,False,False,GraniteMoeHybridForCausalLM,131072,Arabic among 12 supported languages,{}
+Granite 4.0,3B-micro,ibm-granite/granite-4.0-micro,instruct,Multilingual,extended,2025-09,3402836480,False,False,GraniteMoeHybridForCausalLM,131072,Arabic among 12 supported languages,{}
+Granite 4.0-H,3B-micro,ibm-granite/granite-4.0-h-micro-base,base,Multilingual,extended,2025-09,3191396096,False,False,GraniteMoeHybridForCausalLM,131072,Arabic among 12 supported languages,{}
+Granite 4.0-H,3B-micro,ibm-granite/granite-4.0-h-micro,instruct,Multilingual,extended,2025-09,3191396096,False,False,GraniteMoeHybridForCausalLM,131072,Arabic among 12 supported languages,{}
+Granite 3.3,2B,ibm-granite/granite-3.3-2b-base,base,Multilingual,extended,2025-04,2533525504,False,False,GraniteForCausalLM,131072,Arabic among 12 supported languages,{}
+Granite 3.3,2B,ibm-granite/granite-3.3-2b-instruct,instruct,Multilingual,extended,2025-04,2533539840,False,False,GraniteForCausalLM,131072,Arabic among 12 supported languages,{}
+Granite 3.1,2B,ibm-granite/granite-3.1-2b-base,base,Multilingual,extended,2024-12,2533525504,False,False,GraniteForCausalLM,131072,Arabic among 12 supported languages,{}
+Granite 3.1,2B,ibm-granite/granite-3.1-2b-instruct,instruct,Multilingual,extended,2024-12,2533531648,False,False,GraniteForCausalLM,131072,Arabic among 12 supported languages,{}
+Granite 3.0,2B,ibm-granite/granite-3.0-2b-base,base,Multilingual,extended,2024-10,2533525504,False,False,GraniteForCausalLM,4096,Arabic among 12 supported languages,{}
+Granite 3.0,2B,ibm-granite/granite-3.0-2b-instruct,instruct,Multilingual,extended,2024-10,2634201088,False,False,GraniteForCausalLM,4096,Arabic among 12 supported languages,{}
+Granite 3.0 MoE,1B-A400M,ibm-granite/granite-3.0-1b-a400m-base,base,Multilingual,extended,2024-10,1384956928,False,False,GraniteMoeForCausalLM,4096,Arabic among 12 supported languages,{}
+Granite 3.0 MoE,1B-A400M,ibm-granite/granite-3.0-1b-a400m-instruct,instruct,Multilingual,extended,2024-10,1334628352,False,False,GraniteMoeForCausalLM,4096,Arabic among 12 supported languages,{}
+Granite 3.0 MoE,3B-A800M,ibm-granite/granite-3.0-3b-a800m-base,base,Multilingual,extended,2024-10,3374286336,False,False,GraniteMoeForCausalLM,4096,Arabic among 12 supported languages,{}
+Granite 3.0 MoE,3B-A800M,ibm-granite/granite-3.0-3b-a800m-instruct,instruct,Multilingual,extended,2024-10,3374295552,False,False,GraniteMoeForCausalLM,4096,Arabic among 12 supported languages,{}
+LFM2,350M,LiquidAI/LFM2-350M,instruct,Multilingual,extended,2025-07,354483968,False,False,Lfm2ForCausalLM,128000,Card language list includes Arabic,{}
+LFM2,700M,LiquidAI/LFM2-700M,instruct,Multilingual,extended,2025-07,742489344,False,False,Lfm2ForCausalLM,128000,Card language list includes Arabic,{}
+LFM2,1.2B,LiquidAI/LFM2-1.2B,instruct,Multilingual,extended,2025-07,1170340608,False,False,Lfm2ForCausalLM,128000,Card language list includes Arabic,{}
+LFM2,2.6B,LiquidAI/LFM2-2.6B,instruct,Multilingual,extended,2025-09,2569272320,False,False,Lfm2ForCausalLM,128000,Card language list includes Arabic,{}
+Tiny Aya,3.35B-Fire,CohereLabs/tiny-aya-fire,instruct,Multilingual,extended,2026-02,3349227520,False,auto,Cohere2ForCausalLM,8192,South Asia variant,{}
+Tiny Aya,3.35B-Water,CohereLabs/tiny-aya-water,instruct,Multilingual,extended,2026-02,3349227520,False,auto,Cohere2ForCausalLM,8192,Asia-Pacific & Europe variant,{}
+Phi-3.5-mini,3.8B,microsoft/Phi-3.5-mini-instruct,instruct,Multilingual,extended,2024-08,3821079552,False,False,Phi3ForCausalLM,131072,Card lists Arabic,{}
+Falcon-H1-Tiny,100M,tiiuae/Falcon-H1-Tiny-Multilingual-100M-Base,base,Multilingual,extended,2026-01,107908288,False,False,FalconH1ForCausalLM,262144,Multilingual; Arabic not named on card (to verify),{}
+Falcon-H1-Tiny,100M,tiiuae/Falcon-H1-Tiny-Multilingual-100M-Instruct,instruct,Multilingual,extended,2026-01,107908288,False,False,FalconH1ForCausalLM,262144,Multilingual; Arabic not named on card (to verify),{}
+BLOOM,560M,bigscience/bloom-560m,base,Multilingual,extended,2022,559214592,False,False,BloomForCausalLM,2048,Arabic ~4.6% of ROOTS,{}
+BLOOM,1.1B,bigscience/bloom-1b1,base,Multilingual,extended,2022,1065314304,False,False,BloomForCausalLM,2048,Arabic ~4.6% of ROOTS,{}
+BLOOM,1.7B,bigscience/bloom-1b7,base,Multilingual,extended,2022,1722408960,False,False,BloomForCausalLM,2048,Arabic ~4.6% of ROOTS,{}
+BLOOM,3B,bigscience/bloom-3b,base,Multilingual,extended,2022,3002557440,False,False,BloomForCausalLM,2048,Arabic ~4.6% of ROOTS,{}
+XGLM,564M,facebook/xglm-564M,base,Multilingual,extended,2021,,False,False,XGLMForCausalLM,2048,Arabic among 30 languages,"{""backend"": ""hf""}"
+XGLM,1.7B,facebook/xglm-1.7B,base,Multilingual,extended,2021,,False,False,XGLMForCausalLM,2048,Arabic among 30 languages,"{""backend"": ""hf""}"
+XGLM,2.9B,facebook/xglm-2.9B,base,Multilingual,extended,2021,,False,False,XGLMForCausalLM,2048,Arabic among 30 languages,"{""backend"": ""hf""}"
+mGPT,1.3B,ai-forever/mGPT,base,Multilingual,extended,2022,,False,False,GPT2LMHeadModel,2048,Arabic among 61 languages,{}
+PolyLM,1.7B,DAMO-NLP-MT/polylm-1.7b,base,Multilingual,extended,2023,,False,False,GPT2LMHeadModel,2048,Arabic among 18 languages,{}
+Llama 3.2,1B,meta-llama/Llama-3.2-1B-Instruct,instruct,Control (no documented Arabic),control,2024-09,1235814400,False,manual,LlamaForCausalLM,131072,"8 official languages, Arabic not among them",{}
+Llama 3.2,3B,meta-llama/Llama-3.2-3B-Instruct,instruct,Control (no documented Arabic),control,2024-09,3212749824,False,manual,LlamaForCausalLM,131072,"8 official languages, Arabic not among them",{}

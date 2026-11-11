@@ -80,10 +80,30 @@ def select_tasks(tasks: list[TaskSpec], select) -> list[TaskSpec]:
     return [t for t in tasks if t.name in names or tags & set(t.tags) or t.category in cats]
 
 
+def _model_matches(m: ModelSpec, token: str) -> bool:
+    """A token matches a model's name, path or type, any meta value (set, family, tier...),
+    or a meta flag set to true (e.g. `edge_total_gt4b`)."""
+    if token in (m.name, m.path, m.type):
+        return True
+    for k, v in m.meta.items():
+        if (v is True and token == k) or (not isinstance(v, bool) and str(v) == token):
+            return True
+    return False
+
+
+def select_models(models: list[ModelSpec], select=None, exclude=None) -> list[ModelSpec]:
+    """select: None/"all" or list of tokens (OR); exclude: list of tokens removed afterwards."""
+    as_list = lambda x: [s.strip() for s in x.split(",")] if isinstance(x, str) else list(x or [])
+    keep = models if select in (None, "all") else [m for m in models if any(_model_matches(m, t) for t in as_list(select))]
+    return [m for m in keep if not any(_model_matches(m, t) for t in as_list(exclude))]
+
+
 DEFAULT_RUN = {
     "run_name": "run",
     "output_dir": "results",
     "select": "all",
+    "model_select": "all",          # e.g. [core] / [core, control] / [instruct] / model names
+    "model_exclude": [],            # e.g. [edge_total_gt4b] to apply a strict 4.0B total-parameter cap
     "limit": None,
     "letters": "arabic",            # option letters shown to models: arabic (أ ب ج د) | latin (A B C D)
     "mcq_mode": "loglik",           # loglik | generate | auto (auto: base -> loglik, instruct -> generate)

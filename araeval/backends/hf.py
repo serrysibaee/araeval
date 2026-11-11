@@ -20,9 +20,16 @@ class HFBackend(Backend):
         if spec.load_in_4bit:
             from transformers import BitsAndBytesConfig
             mkw["quantization_config"] = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_compute_dtype=torch.bfloat16)
-        self.model = AutoModelForCausalLM.from_pretrained(spec.path, **mkw).eval()
+        try:
+            self.model = AutoModelForCausalLM.from_pretrained(spec.path, **mkw).eval()
+        except ValueError:
+            # Natively multimodal checkpoints (Qwen3.5, Gemma 3/4, Ministral 3) register only an
+            # image-text class; it accepts text-only input_ids and returns the same logits.
+            from transformers import AutoModelForImageTextToText
+            self.model = AutoModelForImageTextToText.from_pretrained(spec.path, **mkw).eval()
         self.device = next(self.model.parameters()).device
-        self.max_len = spec.max_model_len or getattr(self.model.config, "max_position_embeddings", 4096) or 4096
+        cfg = getattr(self.model.config, "text_config", None) or self.model.config
+        self.max_len = spec.max_model_len or getattr(cfg, "max_position_embeddings", 4096) or 4096
 
     def _encode(self, text: str) -> list[int]:
         return self.tokenizer(text, add_special_tokens=False)["input_ids"]

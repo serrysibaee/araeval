@@ -33,6 +33,7 @@ class ModelSpec:
     api_base: str | None = None              # openai backend
     api_key_env: str = "OPENAI_API_KEY"      # openai backend
     system_prompt: str | None = None         # instruct models only
+    chat_template_kwargs: dict = field(default_factory=dict)  # e.g. {enable_thinking: false} for Qwen3/3.5
     meta: dict = field(default_factory=dict)  # tier, arabic_category, family... copied into reports
 
     @property

@@ -11,7 +11,7 @@ import argparse
 import sys
 from pathlib import Path
 
-from .config import load_models, load_run_config, load_tasks, select_tasks
+from .config import load_models, load_run_config, load_tasks, select_models, select_tasks
 from .report import build_report
 from .runner import Runner, slug
 
@@ -38,6 +38,14 @@ def main(argv=None):
     r.add_argument("--allow-judge", action="store_true", help="enable paid LLM-judge tasks")
     r.add_argument("--force", action="store_true", help="re-run even if cached results exist")
     r.add_argument("--backend", help="override backend for every model (vllm/hf/openai/dummy)")
+    r.add_argument("--model-select", help="comma list: model names, sets (core/extended/control), family, tier, type")
+    r.add_argument("--model-exclude", help="comma list removed after selection, e.g. edge_total_gt4b")
+
+    ms = sub.add_parser("models", help="show which models a config/selection resolves to")
+    ms.add_argument("--config")
+    ms.add_argument("--models")
+    ms.add_argument("--model-select")
+    ms.add_argument("--model-exclude")
 
     rep = sub.add_parser("report")
     rep.add_argument("run_dir")
@@ -52,6 +60,16 @@ def main(argv=None):
 
     if a.cmd == "report":
         build_report(Path(a.run_dir))
+        return
+
+    if a.cmd == "models":
+        cfg = load_run_config(a.config)
+        models = _resolve_models(cfg, a)
+        for m in models:
+            meta = m.meta
+            print(f"{m.name:44s} {m.type:8s} {str(meta.get('set', '')):9s} {str(meta.get('tier', '')):14s} "
+                  f"{str(meta.get('total_params_b', '')):>6s}  {meta.get('arabic_category', '')}")
+        print(f"\n{len(models)} models selected")
         return
 
     tasks_all = load_tasks(a.tasks)
@@ -98,13 +116,27 @@ def main(argv=None):
             cfg[key] = val
     if a.allow_judge:
         cfg["allow_judge"] = True
-    models = load_models(cfg["models"])
+    models = _resolve_models(cfg, a)
     if a.backend:
         for m in models:
             m.backend = a.backend
     print(f"{len(models)} models × {len(tasks)} tasks -> {Path(cfg['output_dir']) / slug(cfg['run_name'])}")
     out = Runner(models, tasks, cfg).run(force=a.force)
     build_report(out, run_cfg=cfg)
+
+
+def _resolve_models(cfg, a):
+    if getattr(a, "models", None):
+        cfg["models"] = a.models
+    if not cfg.get("models"):
+        sys.exit("no models: pass --models or set `models:` in the run config")
+    for key, val in (("model_select", a.model_select), ("model_exclude", a.model_exclude)):
+        if val:
+            cfg[key] = val
+    models = select_models(load_models(cfg["models"]), cfg.get("model_select"), cfg.get("model_exclude"))
+    if not models:
+        sys.exit("model selection matched no models")
+    return models
 
 
 if __name__ == "__main__":
