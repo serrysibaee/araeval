@@ -114,6 +114,8 @@ Today araeval does the following:
 - **Few-shot draw:** keyed to task + item id, so there is exactly one fixed draw.
 - **Statistics:** standard errors are stored per metric.
 
+*Update, 16 Nov 2026 (araeval 0.2.0):* four changes are now in araeval. The full-run config sets `mcq_style: both`, which scores both formulations and keeps the better. Each result records its environment. Cluster keys are stored for Belebele, Dialectal-MMLU and AraDiCE-PIQA. Cached results are reused only when their settings match. Few-shot seeds and the report additions (confidence intervals, chance-adjusted averages, paired tests) are still to do.
+
 | Topic | Common practice | araeval now | Suggested change |
 |---|---|---|---|
 | **MCQ formulation** | Use cloze for small models; OLMES runs both and keeps the better | letter (MCF) on 15 of 17 MCQ tasks, set per task in `tasks.yaml` | Run both `letter` and `choice_text` and report the better per model and task (OLMES rule), with both in the appendix. **This matters most for us:** sub-1B and base models may sit at chance under MCF. It needs a run-level `mcq_style` switch. |
@@ -135,7 +137,7 @@ Today araeval does the following:
 | ±3–3.5 | ArabicSense (848), MadinahQA (977) |
 | ±2.5–2.7 | Arabic GSM8K (1,306), XStoryCloze (1,511) |
 | ±1.2–1.9 | 3LM (2,608), ArabCulture (3,444), Belebele\* (5,400), AraDiCE-PIQA (5,514), Fann-or-Flop (6,754), GATmath (6,818) |
-| < ±1 | ArabicMMLU (13,690), Dialectal-MMLU\* (21,943) |
+| < ±1 | ArabicMMLU (13,690), Dialectal-MMLU\* (15,675) |
 
 \* The true interval is wider, because items are clustered (by passage, or the same question in five dialects).
 

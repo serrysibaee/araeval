@@ -9,6 +9,7 @@ limit: null                          # e.g. 200 for a quick pass (deterministic 
 
 letters: arabic                      # option letters: arabic (أ ب ج د) or latin (A B C D)
 mcq_mode: loglik                     # loglik (comparable across base/instruct) | generate | auto
+mcq_style: task                      # task (each task's own style) | both (letter + cloze, keep the better)
 mcq_max_new_tokens: 32
 
 allow_judge: false                   # true -> run judge tasks (paid API calls)

@@ -32,6 +32,11 @@ class Backend:
         """Greedy generation from already formatted prompts."""
         raise NotImplementedError
 
+    def describe(self) -> dict:
+        """How the model was actually loaded (saved with every result)."""
+        return {"backend": type(self).__name__.replace("Backend", "").lower(),
+                "max_len": getattr(self, "max_len", None), "dtype": self.spec.dtype}
+
     def close(self) -> None:
         pass
 

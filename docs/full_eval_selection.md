@@ -2,7 +2,7 @@
 
 *Compiled 11 November 2026. Hub metadata checked the same day.*
 
-**Result:** 20 datasets covering six categories (75,100 items per model), and 132 verified checkpoints from 42 model families. Of these, 61 are the latest-generation "core" set and 2 are controls without official Arabic support.
+**Result:** 20 datasets covering six categories (68,832 items per model), and 132 verified checkpoints from 42 model families. Of these, 61 are the latest-generation "core" set and 2 are controls without official Arabic support.
 
 | | Datasets | Models |
 |---|---|---|
@@ -39,7 +39,7 @@ To run it: `python -m araeval run --config configs/run_full_le4b.yaml`
 | | INCLUDE (Arabic) | 552 | A: ICLR 2025 | native regional exams | acc |
 | | 3LM STEM | 2,608 | B: arXiv 2507.15850 | native STEM | acc |
 | **Culture & dialects** | ArabCulture | 3,444 | A: ACL 2025 | native, 13 countries | acc |
-| | Dialectal Arabic MMLU | 21,943 | A: LREC 2026 | human-translated, 5 dialects | acc |
+| | Dialectal Arabic MMLU | 15,675 | A: LREC 2026 | human-translated, 5 dialects (3,135 questions × EGY, KSA, MAG, SYR, UAE) | acc |
 | | AraDiCE-PIQA | 5,514 | A: COLING 2025 | post-edited (Egyptian, Levantine, MSA) | acc / acc_norm |
 | | Belebele (MSA + 5 dialects) | 5,400 | A: ACL 2024 | human-translated | acc |
 | **Linguistic competence** | MadinahQA | 977 | C: OALL v2 / HELM Arabic task | native grammar & language | acc |
@@ -55,6 +55,8 @@ To run it: `python -m araeval run --config configs/run_full_le4b.yaml`
 | | AraGen (3C3H) *(judge)* | 340 | C: AraGen leaderboard | native prompts | 3C3H score |
 | | Aya human-annotated (ar) *(judge)* | 250 | A: ACL 2024 | human-written | judge 1–5 |
 | **Trust & safety** | AraTrust | 522 | A: COLING 2025 | native, 8 trust categories | acc |
+
+*Correction, 16 Nov 2026:* the first Dialectal-MMLU mapping also took the English and MSA copies of each question (21,943 items). It now keeps only the 5 dialects.
 
 Out of 20: **11 are tier A, 4 tier B and 5 tier C.** Each tier-C dataset fills a gap with no A/B alternative, and the reason is in the decision table. Base models can take 16 of the 20; the instruction category needs instruct models.
 
@@ -124,7 +126,8 @@ That's 9 Arabic-specific and 52 multilingual checkpoints: 37 instruct and 24 bas
 
 - **Thinking mode off:** Qwen3, Qwen3.5 and Nemotron get `chat_template_kwargs: {enable_thinking: false}`. Otherwise they write long `<think>` traces that break answer extraction.
 - **Context:** `max_model_len` is the model's native context, capped at 8,192 tokens. Older models have shorter limits (AraGPT2 1,024; ArabianGPT-01B 768; Jais-family and BLOOM 2,048), so long prompts (5-shot GSM8K) get truncated for them.
-- **Multiple-choice scoring:** answers are scored by answer-option probability for every model, so base and instruct models are compared the same way.
+- **Multiple-choice scoring:** answers are scored by answer-option probability for every model, so base and instruct models are compared the same way. `mcq_style: both` scores each task two ways, by the answer letter and by the answer text (cloze). The headline score is the better of the two per model and task, following OLMES, and both are kept. Small models often sit near chance with letter scoring. Fann-or-Flop is letter-only, because its options are written inside the question. See `docs/slm_eval_practices.md`.
+- **Linked items:** Belebele (same passage), Dialectal-MMLU (same question in five dialects) and AraDiCE-PIQA (same item in three varieties) record a `cluster` key for each item, so error bars can account for linked items.
 
 ## Before the full run
 

@@ -56,14 +56,24 @@ class HFBackend(Backend):
                 ids = items[i][0]
                 inp[r, :len(ids)] = torch.tensor(ids)
                 att[r, :len(ids)] = 1
-            logits = self.model(input_ids=inp.to(self.device), attention_mask=att.to(self.device)).logits
-            logp = torch.log_softmax(logits.float(), dim=-1)
+            # only the positions that predict continuation tokens get logits: full (batch, len, vocab) logits
+            # need tens of GB for 250k-token vocabularies (Gemma, Qwen3.5) and long prompts
+            need = sorted({p for i in idx for p in range(len(items[i][0]) - items[i][1] - 1, len(items[i][0]) - 1)})
+            col = {p: j for j, p in enumerate(need)}
+            kw = dict(input_ids=inp.to(self.device), attention_mask=att.to(self.device))
+            try:
+                logits = self.model(**kw, logits_to_keep=torch.tensor(need, device=self.device)).logits
+            except TypeError:                    # model without logits_to_keep (older / remote code)
+                logits = self.model(**kw).logits
+            if logits.shape[1] != len(need):     # the model ignored logits_to_keep and returned every position
+                logits = logits[:, need]
             for r, i in enumerate(idx):
                 ids, n_cont = items[i]
                 n = len(ids)
-                tgt = torch.tensor(ids[n - n_cont:], device=self.device)
-                pos = torch.arange(n - n_cont - 1, n - 1, device=self.device)
-                out[i] = logp[r, pos, tgt].sum().item()
+                cols = [col[p] for p in range(n - n_cont - 1, n - 1)]
+                logp = torch.log_softmax(logits[r, cols].float(), dim=-1)
+                tgt = torch.tensor(ids[n - n_cont:], device=logp.device)
+                out[i] = logp[torch.arange(n_cont, device=logp.device), tgt].sum().item()
         return out
 
     @torch.no_grad()
@@ -81,6 +91,9 @@ class HFBackend(Backend):
                 outs.append(truncate_at_stop(self.tokenizer.decode(row, skip_special_tokens=True), stop))
         self.tokenizer.padding_side = "right"
         return outs
+
+    def describe(self):
+        return {**super().describe(), "dtype": str(self.model.dtype), "batch_size": self.spec.batch_size}
 
     def close(self):
         del self.model

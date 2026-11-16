@@ -15,6 +15,8 @@ limit: null
 
 letters: arabic
 mcq_mode: loglik                # same scoring for base and instruct models; run again with `generate` for instruct-only format checks
+mcq_style: both                 # score letter (options listed) and cloze (option text) and keep the better per model x task
+                                # (OLMES); small models often sit near chance with letters. Both scores stay in the results.
 mcq_max_new_tokens: 32
 
 allow_judge: false              # true -> AraGen (340) + Aya (250) = 590 judge calls per instruct model

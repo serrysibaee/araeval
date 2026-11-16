@@ -21,6 +21,7 @@ import pandas as pd
 from . import __version__
 
 SCALE_100 = {"chrf", "bleu"}          # corpus metrics already on 0-100
+ENV_KEYS = ("gpu", "cuda", "torch", "transformers", "vllm", "backend")
 
 
 def _to100(metric: str, v):
@@ -36,11 +37,17 @@ def build_report(run_dir: Path, run_cfg: dict | None = None, print_summary: bool
         raise SystemExit(f"no results under {run_dir/'raw'}")
 
     long_rows, status_rows, group_rows = [], [], []
+    envs = {}
     for m in metas:
         meta = m.get("model_meta") or {}
+        env = m.get("env") or {}
         status_rows.append({"model": m["model"], "task": m["task"], "status": m["status"], "n": m["n"],
                             "seconds": m["seconds"], "reason": (m.get("error") or "").split("\n")[0],
-                            "needs_check": m.get("needs_check", "")})
+                            "needs_check": m.get("needs_check", ""), "backend": env.get("backend", ""),
+                            "dtype": env.get("dtype", ""), "gpu": env.get("gpu", "")})
+        if env:
+            key = {k: env.get(k) for k in ENV_KEYS}
+            envs[json.dumps(key, sort_keys=True)] = key
         if m["status"] != "ok":
             continue
         for k, v in m["metrics"].items():
@@ -52,7 +59,8 @@ def build_report(run_dir: Path, run_cfg: dict | None = None, print_summary: bool
                               "task": m["task"], "category": m["category"], "task_type": m["task_type"],
                               "metric": k, "value": v, "stderr": m["metrics"].get(k + "_stderr"),
                               "is_primary": k == m["primary_metric"], "n": m["n"],
-                              "mcq_mode": m["metrics"].get("mode", ""), "limit": m.get("limit")})
+                              "mcq_mode": m["metrics"].get("mode", ""),
+                              "formulation": m["metrics"].get("formulation", ""), "limit": m.get("limit")})
         # per-group breakdown from per-sample records
         spath = Path(str(run_dir / "raw" / _slug(m["model"]) / _slug(m["task"])) + ".samples.jsonl")
         if spath.exists():
@@ -91,6 +99,7 @@ def build_report(run_dir: Path, run_cfg: dict | None = None, print_summary: bool
         "araeval_version": __version__,
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "python": platform.python_version(),
+        "environments": list(envs.values()),    # distinct software/hardware stacks the results came from
         "run_config": run_cfg,
         "scoring_note": "leaderboard scores are the task's primary metric on 0-100; category and overall "
                         "columns are unweighted means over the tasks a model completed (compare models on "
@@ -104,6 +113,9 @@ def build_report(run_dir: Path, run_cfg: dict | None = None, print_summary: bool
 
     if print_summary:
         _print_summary(board, status_df, run_dir)
+        if len(envs) > 1:
+            print(f"\nnote: results come from {len(envs)} different software/hardware stacks (see report.json "
+                  f"'environments'); small score differences between models may reflect that")
     return report
 
 

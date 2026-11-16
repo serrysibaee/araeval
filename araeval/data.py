@@ -12,6 +12,11 @@ Field mapping keys (all optional except what the task type needs):
   strip_option_labels   remove "أ) " / "A. " prefixes from option texts
   choices_in_question   options are already written inside the question (prompt lists no options)
   gold          generation tasks: column / path / template with the reference output
+  cluster       column / path / template; items with the same value share a passage or source question
+                (stored with every record so the report can compute clustered standard errors)
+
+Every row also carries `_row`, its position within its config (e.g. cluster: "{_row}" for configs that
+are row-aligned translations of each other).
 """
 from __future__ import annotations
 
@@ -140,7 +145,7 @@ def _load_rows(task: TaskSpec, split: str) -> list[tuple[str | None, dict]]:
             ds = load_dataset(task.hf_id, data_files={split: task.data_files[split]}, split=split)
         else:
             ds = load_dataset(task.hf_id, cfg, split=split, **_trc(task))
-        out.extend((cfg, dict(r)) for r in ds)
+        out.extend((cfg, {**r, "_row": j}) for j, r in enumerate(ds))
     return out
 
 
@@ -188,6 +193,7 @@ def to_samples(task: TaskSpec, rows: list[tuple[str | None, dict]]) -> list[Samp
             question=over.get("question", render(row, f.get("question"))),
             context=over.get("context", render(row, f.get("context"))),
             choices=choices, gold=gold, group=over.get("group", group),
+            cluster=render(row, f.get("cluster")),
             meta={**over.get("meta", {}), "choices_in_question": bool(f.get("choices_in_question"))},
         ))
     return samples

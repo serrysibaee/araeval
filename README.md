@@ -49,8 +49,16 @@ python -m araeval report results/slm_core_2026-10
 ```
 
 Runs **resume**: every finished model × task is cached under `raw/`. Re-running skips them (`--force` recomputes).
+A cached result is reused only if the settings that produced it are unchanged (task spec, model spec, `limit`,
+`mcq_style`, letters…); otherwise it is re-run and the log says what changed (e.g. `run.limit: 20 -> None`), so a
+`--limit` pass and the full run can share a run name safely. Skipped pairs are re-checked on every run.
 Unfinished tasks resume mid-dataset too: model answers are saved every 256 requests to `raw/<model>/<task>.partial.jsonl`
 (deleted once the task finishes). Each model × task shows a progress bar with ETA.
+
+Every result also records the environment that produced it (`env` in `raw/<model>/<task>.metrics.json`: araeval,
+torch, transformers, vLLM and datasets versions, GPU, backend, dtype, context length, and the Hub commit of the
+model and the dataset). `report.json` lists the distinct stacks under `environments`, and the summary warns when
+results come from more than one.
 
 ## Inputs
 
@@ -71,7 +79,7 @@ or category (Knowledge, Culture & dialects, Linguistic competence, Reasoning, In
 
 | type | used for | scoring |
 |---|---|---|
-| `mcq` | exams, culture, dialect MCQ, reading comp., linguistics | `loglik` (default): log-likelihood of each option letter (or option text for completion tasks: acc + length-normalised acc_norm). Works for base **and** instruct models, so all models are comparable. `generate`: the model answers and the letter is extracted (`unparsed_rate` reported). |
+| `mcq` | exams, culture, dialect MCQ, reading comp., linguistics | `loglik` (default): log-likelihood of each option letter (or option text for completion tasks: acc + length-normalised acc_norm). Works for base **and** instruct models, so all models are comparable. With `mcq_style: both` every task is scored two ways in one pass, **letter** (options listed, target = letter) and **cloze** (options hidden, target = option text after `الإجابة:`, normalised per character), and `acc` is the better of `acc_letter` and `acc_norm_cloze` for that model and task (OLMES); both stay in the results and `formulation` says which one was used. Small models often sit near chance with letters. `generate`: the model answers and the letter is extracted (`unparsed_rate` reported). |
 | `generate` | extractive QA, GSM8K, GEC, MT, summarisation | `em`, `numeric_em`, token `f1`, `contains`, `rouge` (Arabic-safe), corpus `chrf` / `bleu` (sacrebleu) |
 | `ifeval` | Arabic IFEval | 23 rule checkers incl. Arabic-specific (tashkeel, letter frequency, pronoun lists); prompt/instruction-level strict + loose accuracy |
 | `judge` | AraGen 3C3H, poetry explanation, Aya, ALARB | model answers, then an LLM judge (Claude by default) scores against the reference with a rubric; cached in `judge_cache.jsonl` |
@@ -85,11 +93,12 @@ Arabic handling: answers and references are normalised (diacritics, tatweel, ale
 | file | content |
 |---|---|
 | `leaderboard.csv` | models × tasks (primary metric, 0-100), category means, `overall`, `tasks_done` |
-| `results_long.csv` | every metric: model, task, category, metric, value, stderr, n, mode |
+| `results_long.csv` | every metric: model, task, category, metric, value, stderr, n, mode, formulation |
 | `by_group.csv` | per-subject / per-dialect / per-config breakdown |
-| `task_status.csv` | ok / skipped / error with the reason for every model × task |
-| `report.json` | all of the above + run config and metadata |
-| `raw/<model>/<task>.samples.jsonl` | per-item predictions, outputs, log-likelihoods (error analysis) |
+| `task_status.csv` | ok / skipped / error with the reason for every model × task, plus backend, dtype, GPU |
+| `report.json` | all of the above + run config, metadata and the software/hardware stacks used |
+| `raw/<model>/<task>.samples.jsonl` | per-item predictions, outputs, log-likelihoods, `cluster` (error analysis, clustered standard errors) |
+| `raw/<model>/<task>.metrics.json` | task metrics + the `settings` and `fingerprint` used for caching + `env` |
 
 `overall` and category columns are unweighted means over the tasks a model completed. Base models skip
 instruct-only tasks, so compare them on the same task set (`tasks_done`) or per category.
@@ -111,6 +120,8 @@ Add an entry to `configs/tasks.yaml`:
     choices: [opt_a, opt_b, opt_c, opt_d]     # or a list/dict column, or {fixed: [...]}
     answer: label
     answer_format: index0                    # letter | arabic_letter | index0 | index1 | text | map | index_list0
+    cluster: passage_id                      # optional: items sharing a passage / source question ("{_row}" =
+                                             # row position, for configs that are row-aligned translations)
   group_by: subject
   tags: [mine]
 ```
@@ -130,6 +141,7 @@ A new **task type** = subclass `araeval/tasks/base.py:Task`, implement `run()`, 
 
 ## Tested
 
-- `python tests/test_core.py`: 8 offline tests (normalisation, metrics, gold formats, field mapping, letter extraction, 23 IFEval checkers, dummy end-to-end).
+- `python tests/test_core.py`: 16 offline tests (normalisation, metrics, gold formats, field mapping, letter extraction, 23 IFEval checkers, dummy end-to-end, resume, model selection, letter + cloze scoring, settings-aware cache).
+- 2026-11-16: SmolLM2-135M base + instruct × 5 full-suite tasks with `mcq_style: both` (HF backend); HF log-likelihoods match an unbatched full-logits reference exactly in float32.
 - `python -m araeval check --select all`: every enabled task loaded from the Hub and rendered (2026-10-21).
 - CPU smoke run: SmolLM2-135M base + instruct × 8 tasks (loglik MCQ, choice-text MCQ, extractive QA, 5-shot GSM8K, IFEval, skip rules, report).

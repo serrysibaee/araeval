@@ -202,6 +202,74 @@ def test_chat_template_kwargs_passed():
     assert b.format_prompt("hi") == "hi|{'enable_thinking': False}"
 
 
+def _capitals(n=6):
+    spec = TaskSpec(name="cap", hf_id="-", type="mcq", category="Toy",
+                    fields={"question": "q", "choices": ["a", "b", "c"], "answer": "ans", "answer_format": "index0",
+                            "cluster": "{src}"})
+    rows = [(None, {"q": f"عاصمة {i}", "a": "القاهرة", "b": "دمشق", "c": "بغداد", "ans": i % 3, "src": f"p{i // 2}"})
+            for i in range(n)]
+    return spec, to_samples(spec, rows)
+
+
+def test_mcq_both_formulations():
+    from araeval.backends.dummy import DummyBackend
+    spec, samples = _capitals()
+    gold_text = {s.question: s.choices[s.gold] for s in samples}
+
+    class Cloze(DummyBackend):           # knows the answer texts, always picks the first letter
+        seen = []
+
+        def loglikelihood(self, requests):
+            self.seen += requests
+            q = lambda c: next(k for k in gold_text if k in c)
+            return [(0.0 if t.strip() == gold_text[q(c)] else -5.0) if len(t.strip()) > 1 else
+                    (-0.5 if t.strip() == "أ" else -1.0) for c, t in requests]
+
+    be = Cloze(ModelSpec(name="m", path="-"))
+    records, metrics = MCQTask(spec, {"letters": "arabic", "mcq_style": "both"}).run(be, samples, [])
+    assert metrics["formulation"] == "cloze" and metrics["acc"] == metrics["acc_norm_cloze"] == 1.0
+    assert abs(metrics["acc_letter"] - 1 / 3) < 1e-9 and all(r["acc"] == 1.0 for r in records)
+    letter_ctx = next(c for c, t in be.seen if t.strip() == "أ")
+    cloze_ctx = next(c for c, t in be.seen if t.strip() == "القاهرة")
+    assert "أ. القاهرة" in letter_ctx and cloze_ctx.endswith("الإجابة:") and "القاهرة" not in cloze_ctx
+    # task style only: letter scoring, same record keys as before
+    records, metrics = MCQTask(spec, {"letters": "arabic"}).run(Cloze(ModelSpec(name="m", path="-")), samples, [])
+    assert metrics["formulation"] == "letter" and "acc_letter" not in metrics and set(records[0]) >= {"pred", "acc", "logliks"}
+    # options written inside the question -> cloze is impossible, letter only
+    spec.fields["choices_in_question"] = True
+    assert MCQTask(spec, {"mcq_style": "both"}).formulations() == ["letter"]
+
+
+def test_cache_reused_only_with_same_settings(tmp_path=None):
+    import tempfile
+    import araeval.runner as rm
+    from araeval.backends.dummy import DummyBackend
+    from araeval.runner import Runner
+    out = Path(tmp_path or tempfile.mkdtemp())
+    spec, samples = _capitals()
+    calls, logs = [], []
+
+    def run(**over):
+        cfg = {"output_dir": str(out), "run_name": "fp", "mcq_mode": "loglik", "letters": "arabic", **over}
+        r = Runner([ModelSpec(name="dummy", path="-", backend="dummy")], [spec], cfg, log=logs.append)
+        r._data_cache["cap"] = (samples, [])
+        rm.load_backend = lambda m: calls.append(m) or DummyBackend(m)
+        r.run()
+        return r.out
+
+    run(limit=3)
+    run(limit=3)
+    assert len(calls) == 1 and any(l.endswith(": cached") for l in logs)
+    run_dir = run()                                                     # full run under the same name
+    assert len(calls) == 2 and any("run.limit: 3 -> None" in l for l in logs)
+    run(mcq_style="both")
+    assert len(calls) == 3
+    meta = json.loads((run_dir / "raw/dummy/cap.metrics.json").read_text(encoding="utf-8"))
+    recs = [json.loads(l) for l in (run_dir / "raw/dummy/cap.samples.jsonl").read_text(encoding="utf-8").splitlines()]
+    assert meta["settings"]["run"]["mcq_style"] == "both" and meta["env"]["backend"] == "dummy" and meta["env"]["python"]
+    assert [r["cluster"] for r in recs] == ["p0", "p0", "p1", "p1", "p2", "p2"]
+
+
 def test_registry_full_suite():
     from araeval.config import load_tasks, select_tasks
     tasks = load_tasks(Path(__file__).resolve().parent.parent / "configs" / "tasks.yaml")

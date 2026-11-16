@@ -107,6 +107,7 @@ DEFAULT_RUN = {
     "limit": None,
     "letters": "arabic",            # option letters shown to models: arabic (أ ب ج د) | latin (A B C D)
     "mcq_mode": "loglik",           # loglik | generate | auto (auto: base -> loglik, instruct -> generate)
+    "mcq_style": "task",            # task (each task's own style) | both (letter + cloze, keep the better: OLMES)
     "mcq_max_new_tokens": 32,
     "allow_judge": False,           # judge tasks call a paid API: must be switched on explicitly
     "judge": {"provider": "anthropic", "model": "claude-opus-5-5", "effort": "medium", "concurrency": 8},

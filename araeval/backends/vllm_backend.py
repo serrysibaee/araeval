@@ -47,6 +47,14 @@ class VLLMBackend(Backend):
         res = self.llm.generate(prompts, sp, use_tqdm=False)  # araeval draws its own per-task bar
         return [truncate_at_stop(r.outputs[0].text, stop) for r in res]
 
+    def describe(self):
+        out = super().describe()
+        try:
+            out["dtype"] = str(self.llm.llm_engine.model_config.dtype)
+        except Exception:
+            pass
+        return out
+
     def close(self):
         try:
             from vllm.distributed.parallel_state import destroy_model_parallel

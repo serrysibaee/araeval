@@ -35,6 +35,7 @@ def main(argv=None):
     r.add_argument("--out", help="output directory (default results/)")
     r.add_argument("--name", help="run name")
     r.add_argument("--mcq-mode", choices=["loglik", "generate", "auto"])
+    r.add_argument("--mcq-style", choices=["task", "both"], help="both: score letter and cloze, keep the better (OLMES)")
     r.add_argument("--allow-judge", action="store_true", help="enable paid LLM-judge tasks")
     r.add_argument("--force", action="store_true", help="re-run even if cached results exist")
     r.add_argument("--backend", help="override backend for every model (vllm/hf/openai/dummy)")
@@ -100,8 +101,12 @@ def main(argv=None):
                 samples, shots = load_task(t, limit=cfg.get("limit") or 50)
                 task = TASK_TYPES[t.type](t, cfg)
                 s = samples[0]
-                prompt = task.build_prompt(s, task.pick_shots(shots, s)) if hasattr(task, "build_prompt") else s.question
-                print(f"=== {t.name} ({len(samples)} items loaded, gold={s.gold!r:.60})\n{prompt[:700]}\n")
+                picked = task.pick_shots(shots, s)
+                if hasattr(task, "formulations"):      # MCQ: one prompt per scored formulation
+                    prompt = "\n".join(f"[{f}]\n{task.build_prompt(s, picked, form=f)[:700]}" for f in task.formulations())
+                else:
+                    prompt = (task.build_prompt(s, picked) if hasattr(task, "build_prompt") else s.question)[:700]
+                print(f"=== {t.name} ({len(samples)} items loaded, gold={s.gold!r:.60})\n{prompt}\n")
             except Exception as e:
                 print(f"!!! {t.name}: {type(e).__name__}: {e}\n")
         return
@@ -111,7 +116,7 @@ def main(argv=None):
         cfg["models"] = a.models
     if not cfg.get("models"):
         sys.exit("no models: pass --models or set `models:` in the run config")
-    for key, val in (("output_dir", a.out), ("run_name", a.name), ("mcq_mode", a.mcq_mode)):
+    for key, val in (("output_dir", a.out), ("run_name", a.name), ("mcq_mode", a.mcq_mode), ("mcq_style", a.mcq_style)):
         if val:
             cfg[key] = val
     if a.allow_judge:

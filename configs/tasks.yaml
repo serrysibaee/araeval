@@ -251,7 +251,9 @@ tasks:
   type: mcq
   category: "Culture & dialects"
   split: test
-  fields: {question: question, choices: choices, answer: answer, answer_format: index0}
+  # each question has 7 versions (ENG, MSA + 5 dialects); keep the 5 dialects. cluster = same source question
+  filters: {dialect: [EGY, KSA, MAG, SYR, UAE]}
+  fields: {question: question, choices: choices, answer: answer, answer_format: index0, cluster: "{domain}-{qid}"}
   group_by: dialect
   tags: [full, dialect]
 
@@ -285,7 +287,8 @@ tasks:
   configs: [PIQA-egy, PIQA-lev, PIQA-msa]
   split: test
   mcq_style: choice_text
-  fields: {question: goal, choices: [sol1, sol2], answer: label, answer_format: index0}
+  # the three configs are row-aligned versions of the same items (labels agree on all 1,838 rows)
+  fields: {question: goal, choices: [sol1, sol2], answer: label, answer_format: index0, cluster: "{_row}"}
   group_by: config
   tags: [full, dialect]
 
@@ -328,7 +331,8 @@ tasks:
   category: "Culture & dialects"
   configs: [arb_Arab, acm_Arab, apc_Arab, ars_Arab, ary_Arab, arz_Arab]
   split: test
-  fields: {context: flores_passage, question: question, choices: [mc_answer1, mc_answer2, mc_answer3, mc_answer4], answer: correct_answer_num, answer_format: index1}
+  # cluster = source passage (shared by its questions and by all 6 dialect versions)
+  fields: {context: flores_passage, question: question, choices: [mc_answer1, mc_answer2, mc_answer3, mc_answer4], answer: correct_answer_num, answer_format: index1, cluster: link}
   group_by: config
   tags: [full, reading, dialect]
 

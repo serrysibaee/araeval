@@ -14,6 +14,7 @@ class Sample:
     choices: list[str] = field(default_factory=list)   # MCQ options (empty for generation tasks)
     gold: Any = None                        # MCQ: int index or set of indices; generation: str or list[str]
     group: str = ""                         # breakdown key (subject, dialect, config...)
+    cluster: str = ""                       # items sharing a passage / source question (clustered standard errors)
     meta: dict = field(default_factory=dict)  # anything task-specific (IFEval kwargs, judge rubric...)
 
 
